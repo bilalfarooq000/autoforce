@@ -20,6 +20,12 @@ if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     php artisan migrate --force
 fi
 
+if [ "${RUN_SEEDERS:-false}" = "true" ]; then
+    php artisan db:seed --class=RoleSeeder --force
+    php artisan db:seed --class=DemoDataSeeder --force
+    php artisan db:seed --class=InventorySeeder --force
+fi
+
 php-fpm -D
 
 exec "$@"
