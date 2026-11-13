@@ -7,20 +7,13 @@ COPY resources resources
 COPY vite.config.js postcss.config.js tailwind.config.js ./
 RUN npm run build
 
-# --- Stage 2: PHP app ---
-FROM php:8.3-apache
+# --- Stage 2: PHP app (php-fpm + nginx, no Apache MPM headaches) ---
+FROM php:8.3-fpm-alpine
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        libpng-dev libjpeg62-turbo-dev libfreetype6-dev libzip-dev libicu-dev libonig-dev \
-        unzip git \
+RUN apk add --no-cache \
+        nginx libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev icu-dev icu-libs oniguruma-dev \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
-    && docker-php-ext-install -j"$(nproc)" pdo_mysql gd zip bcmath intl exif opcache \
-    && a2enmod rewrite \
-    && rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf \
-             /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf \
-    && ln -sf ../mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
-    && ln -sf ../mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
-    && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install -j"$(nproc)" pdo_mysql gd zip bcmath intl exif opcache mbstring
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -33,17 +26,14 @@ COPY . .
 COPY --from=assets /app/public/build public/build
 
 RUN composer dump-autoload --optimize --no-dev \
-    && mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache \
+    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["apache2-foreground"]
+CMD ["nginx", "-g", "daemon off;"]

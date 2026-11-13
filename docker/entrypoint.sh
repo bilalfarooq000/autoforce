@@ -1,11 +1,6 @@
 #!/bin/sh
 set -e
 
-# Railway assigns the port at runtime via $PORT — Apache must bind to it.
-PORT="${PORT:-80}"
-sed -ri "s/Listen 80/Listen ${PORT}/" /etc/apache2/ports.conf
-sed -ri "s/:80>/:${PORT}>/" /etc/apache2/sites-available/000-default.conf
-
 # Point the app's uploaded-file storage at the mounted volume, if one is attached.
 if [ -d /data ]; then
     mkdir -p /data/app/public
@@ -24,5 +19,7 @@ php artisan view:cache
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     php artisan migrate --force
 fi
+
+php-fpm -D
 
 exec "$@"
