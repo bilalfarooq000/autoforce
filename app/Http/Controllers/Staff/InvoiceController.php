@@ -57,6 +57,10 @@ class InvoiceController extends Controller
 
     public function create(Inspection $inspection)
     {
+        if ($inspection->invoice) {
+            return redirect()->route('staff.invoices.show', $inspection->invoice);
+        }
+
         $inspection->load('vehicle.customer', 'quotation.items');
 
         return view('staff.invoices.create', compact('inspection'));
@@ -64,6 +68,11 @@ class InvoiceController extends Controller
 
     public function store(Request $request, Inspection $inspection)
     {
+        if ($inspection->invoice) {
+            return redirect()->route('staff.invoices.show', $inspection->invoice)
+                ->with('status', 'This job already has an invoice.');
+        }
+
         $invoice = $this->createInvoiceFromRequest($request, $inspection->vehicle_id, $inspection->vehicle->customer_id, $inspection->id);
 
         return redirect()->route('staff.invoices.show', $invoice)

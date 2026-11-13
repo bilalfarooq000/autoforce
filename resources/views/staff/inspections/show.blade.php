@@ -27,7 +27,7 @@
             @if ($inspection->status === 'checked_in')
                 <form method="POST" action="{{ route('staff.inspections.start', $inspection) }}" class="flex items-center gap-2">
                     @csrf @method('PATCH')
-                    <select name="technician_id" class="rounded-md border-gray-300 shadow-sm text-sm">
+                    <select name="technician_id" class="rounded-md border-gray-300 shadow-sm text-sm" @if (! auth()->user()->hasRole('technician')) required @endif>
                         <option value="">Assign technician...</option>
                         @foreach ($technicians as $tech)
                             <option value="{{ $tech->id }}" @selected($inspection->technician_id === $tech->id)>{{ $tech->name }}</option>

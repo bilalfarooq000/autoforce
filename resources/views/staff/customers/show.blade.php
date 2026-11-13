@@ -2,12 +2,22 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $customer->name }}</h2>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ $customer->name }}
+                    @unless ($customer->is_active)
+                        <span class="ml-2 text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 align-middle">Inactive</span>
+                    @endunless
+                </h2>
                 <p class="text-sm text-gray-500">{{ $customer->phone }} · {{ $customer->email }}</p>
             </div>
-            <a href="{{ route('staff.vehicles.create', ['customer' => $customer->id]) }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
-                + Register Vehicle
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="{{ route('staff.customers.edit', $customer) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
+                    Edit
+                </a>
+                <a href="{{ route('staff.vehicles.create', ['customer' => $customer->id]) }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
+                    + Register Vehicle
+                </a>
+            </div>
         </div>
     </x-slot>
 

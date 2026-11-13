@@ -39,9 +39,12 @@
                     @endforeach
                 </select>
             </div>
-            <div>
+            <div x-data="{ show: false }">
                 <x-input-label for="password" value="Temporary Password" />
-                <x-text-input id="password" name="password" type="text" class="block mt-1 w-full" required />
+                <div class="relative mt-1">
+                    <input id="password" name="password" :type="show ? 'text' : 'password'" class="block w-full rounded-md border-gray-300 shadow-sm pr-16" required>
+                    <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 px-3 text-xs text-gray-500 hover:text-gray-800" x-text="show ? 'Hide' : 'Show'"></button>
+                </div>
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
             <div class="flex justify-end gap-3">

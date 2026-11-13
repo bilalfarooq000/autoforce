@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +48,12 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        // Never let the last admin account delete itself — there would be no
+        // one left who could create or manage any other staff account.
+        if ($user->hasRole('admin') && User::role('admin')->where('is_active', true)->count() <= 1) {
+            return back()->withErrors(['password' => 'You are the only admin account — delete or demote another admin first.'], 'userDeletion');
+        }
 
         Auth::logout();
 

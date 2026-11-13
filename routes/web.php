@@ -112,6 +112,9 @@ Route::middleware(['auth', 'role:admin|manager|service_advisor|technician|invent
         Route::get('/customers/create', [StaffCustomerController::class, 'create'])->name('customers.create');
         Route::post('/customers', [StaffCustomerController::class, 'store'])->name('customers.store');
         Route::get('/customers/{customer}', [StaffCustomerController::class, 'show'])->name('customers.show');
+        Route::get('/customers/{customer}/edit', [StaffCustomerController::class, 'edit'])->name('customers.edit');
+        Route::patch('/customers/{customer}', [StaffCustomerController::class, 'update'])->name('customers.update');
+        Route::patch('/customers/{customer}/toggle', [StaffCustomerController::class, 'toggle'])->name('customers.toggle');
 
         Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
 

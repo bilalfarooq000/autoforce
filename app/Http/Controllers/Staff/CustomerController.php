@@ -42,18 +42,24 @@ class CustomerController extends Controller
         return view('staff.customers.create', compact('sidebarCustomers'));
     }
 
+    /**
+     * Pakistani mobile format — this is the number WhatsApp/SMS notifications
+     * actually go to, so it has to be a real mobile number, not just any string.
+     */
+    private const PHONE_RULE = ['regex:/^(\+?92|0)3\d{2}-?\d{7}$/'];
+
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:30', 'unique:users,phone'],
+            'phone' => ['required', 'string', 'max:30', 'unique:users,phone', ...self::PHONE_RULE],
             'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
         ]);
 
         $customer = User::create([
             'name' => $data['name'],
             'phone' => $data['phone'],
-            'email' => $data['email'] ?: Str::slug($data['phone']).'@customer.autoforce.local',
+            'email' => ($data['email'] ?? null) ?: Str::slug($data['phone']).'@customer.autoforce.local',
             'branch_id' => $request->user()->hasRole('admin') ? null : $request->user()->branch_id,
             'password' => bcrypt(Str::random(16)),
         ]);
@@ -64,6 +70,57 @@ class CustomerController extends Controller
 
         return redirect()->route('staff.customers.show', $customer)
             ->with('status', 'Customer registered. Next, register a vehicle for them.');
+    }
+
+    public function edit(Request $request, User $customer)
+    {
+        abort_unless($customer->hasRole('customer'), 404);
+
+        $sidebarCustomers = $this->sidebarCustomers($request);
+
+        return view('staff.customers.edit', compact('customer', 'sidebarCustomers'));
+    }
+
+    public function update(Request $request, User $customer)
+    {
+        abort_unless($customer->hasRole('customer'), 404);
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:30', 'unique:users,phone,'.$customer->id, ...self::PHONE_RULE],
+            'email' => ['nullable', 'email', 'max:255', 'unique:users,email,'.$customer->id],
+        ]);
+
+        $wasPlaceholder = str_ends_with($customer->email, '@customer.autoforce.local');
+
+        $customer->update([
+            'name' => $data['name'],
+            'phone' => $data['phone'],
+            'email' => ($data['email'] ?? null) ?: ($wasPlaceholder ? Str::slug($data['phone']).'@customer.autoforce.local' : $customer->email),
+        ]);
+
+        // A real email just got added where there wasn't one before — send the
+        // portal welcome link now, since it couldn't be sent at registration.
+        if ($wasPlaceholder && ! empty($data['email'])) {
+            \App\Services\NotificationService::notifyNewCustomerAccount($customer);
+        }
+
+        return redirect()->route('staff.customers.show', $customer)
+            ->with('status', 'Customer updated.');
+    }
+
+    /**
+     * Soft delete: customers can't be hard-deleted once they have vehicles,
+     * inspections or invoices tied to them, so this just hides them from the
+     * active roster instead — exactly like the staff "Deactivate" action.
+     */
+    public function toggle(User $customer)
+    {
+        abort_unless($customer->hasRole('customer'), 404);
+
+        $customer->update(['is_active' => ! $customer->is_active]);
+
+        return back()->with('status', $customer->is_active ? 'Customer reactivated.' : 'Customer deactivated.');
     }
 
     public function show(Request $request, User $customer)

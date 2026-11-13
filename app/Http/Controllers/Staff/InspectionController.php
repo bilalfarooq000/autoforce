@@ -25,7 +25,11 @@ class InspectionController extends Controller
     {
         $data = $request->validate([
             'reason' => ['required', 'string', 'max:255'],
-            'mileage_at_visit' => ['required', 'integer', 'min:0'],
+            'mileage_at_visit' => ['required', 'integer', 'min:0', function ($attribute, $value, $fail) use ($vehicle) {
+                if ($value < $vehicle->mileage) {
+                    $fail("Mileage can't be lower than the last recorded reading ({$vehicle->mileage} km).");
+                }
+            }],
         ]);
 
         $inspection = Inspection::create([
@@ -123,7 +127,12 @@ class InspectionController extends Controller
 
     public function startInspection(Request $request, Inspection $inspection)
     {
-        $data = $request->validate(['technician_id' => ['nullable', 'exists:users,id']]);
+        // A technician starting their own job needs no picker; anyone else
+        // (admin/manager/service_advisor) must explicitly assign one, rather
+        // than the job silently defaulting to whoever happened to click the button.
+        $data = $request->validate([
+            'technician_id' => [$request->user()->hasRole('technician') ? 'nullable' : 'required', 'exists:users,id'],
+        ]);
 
         $inspection->update([
             'status' => 'inspecting',

@@ -108,12 +108,22 @@ class DemoDataSeeder extends Seeder
 
     private function buildJob(Vehicle $vehicle, ?User $technician, User $createdBy, string $status, array $items, bool $quotation, bool $invoice, bool $payFully): void
     {
+        $reason = $items[0]['title'] ?? 'General check-up';
+
+        // This whole method used to run unconditionally on every seeder call —
+        // harmless the first time, but it silently piled up a fresh duplicate
+        // of every demo job (and its quotation/invoice/payment) on every
+        // redeploy that re-ran seeding. One job per vehicle+reason+status, ever.
+        if (Inspection::where('vehicle_id', $vehicle->id)->where('reason', $reason)->where('status', $status)->exists()) {
+            return;
+        }
+
         $inspection = Inspection::create([
             'vehicle_id' => $vehicle->id,
             'branch_id' => $vehicle->branch_id,
             'technician_id' => $technician?->id,
             'created_by' => $createdBy->id,
-            'reason' => $items[0]['title'] ?? 'General check-up',
+            'reason' => $reason,
             'mileage_at_visit' => $vehicle->mileage,
             'status' => $status,
             'summary' => $status !== 'checked_in' ? 'Diagnosis completed, see findings below.' : null,

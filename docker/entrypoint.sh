@@ -27,6 +27,13 @@ if [ "${RUN_SEEDERS:-false}" = "true" ]; then
     php artisan db:seed --class=InventorySeeder --force
 fi
 
+# One-off repair for the duplicate demo jobs created while RUN_SEEDERS ran on
+# every redeploy (fixed above) — idempotent, so leaving this flag on is harmless,
+# but it's meant to be turned off again once the existing duplicates are gone.
+if [ "${CLEANUP_DUPLICATES:-false}" = "true" ]; then
+    php artisan autoforce:cleanup-duplicate-demo-data || true
+fi
+
 php-fpm -D
 
 exec "$@"

@@ -18,7 +18,7 @@
                                 {{ $activity->description }}
                                 @if ($activity->event === 'updated' && $activity->changes()->isNotEmpty())
                                     <div class="text-xs text-gray-400 mt-1">
-                                        {{ $activity->changes()->get('attributes')?->except(['updated_at'])->map(fn ($v, $k) => "{$k}: {$v}")->implode(', ') }}
+                                        {{ collect($activity->changes()->get('attributes'))->except(['updated_at'])->map(fn ($v, $k) => "{$k}: {$v}")->implode(', ') }}
                                     </div>
                                 @endif
                             </td>

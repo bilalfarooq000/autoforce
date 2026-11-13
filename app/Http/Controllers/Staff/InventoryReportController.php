@@ -39,7 +39,10 @@ class InventoryReportController extends Controller
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->where('is_active', true)
             ->whereColumn('quantity_on_hand', '<=', 'reorder_level')
-            ->orderByRaw('quantity_on_hand - reorder_level ASC')
+            // quantity_on_hand/reorder_level are unsigned columns, so a plain
+            // subtraction overflows when the result would be negative — cast
+            // to signed first so MySQL doesn't try to fit it back into unsigned.
+            ->orderByRaw('CAST(quantity_on_hand AS SIGNED) - CAST(reorder_level AS SIGNED) ASC')
             ->get();
 
         $valuationByCategory = InventoryItem::with('category')

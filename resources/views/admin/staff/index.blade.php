@@ -36,7 +36,7 @@
                             </td>
                             <td class="px-4 py-3 text-right whitespace-nowrap">
                                 <a href="{{ route('admin.staff.edit', $member) }}" class="text-red-600 hover:underline mr-3">Edit</a>
-                                @if ($member->is_active)
+                                @if ($member->is_active && $member->id !== auth()->id())
                                     <form method="POST" action="{{ route('admin.staff.destroy', $member) }}" onsubmit="return confirm('Deactivate this staff account?')" class="inline">
                                         @csrf @method('DELETE')
                                         <button class="text-red-600 hover:underline">Deactivate</button>
