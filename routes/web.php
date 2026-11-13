@@ -96,6 +96,14 @@ Route::middleware(['auth', 'role:admin|manager|service_advisor|technician|invent
         Route::get('/invoices/create', [InvoiceController::class, 'selectCustomer'])->name('invoices.select');
         Route::get('/inspections/{inspection}/invoice/create', [InvoiceController::class, 'create'])->name('invoices.create');
         Route::post('/inspections/{inspection}/invoice', [InvoiceController::class, 'store'])->name('invoices.store');
+
+        // Walk-in / counter-sale billing — a vehicle-only invoice with no inspection or
+        // quotation behind it, for customers who just need something billed on the spot.
+        Route::middleware('role:admin|manager|service_advisor')->group(function () {
+            Route::get('/vehicles/{vehicle}/quick-invoice', [InvoiceController::class, 'createQuick'])->name('invoices.quick-create');
+            Route::post('/vehicles/{vehicle}/quick-invoice', [InvoiceController::class, 'storeQuick'])->name('invoices.quick-store');
+        });
+
         Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
         Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
         Route::post('/invoices/{invoice}/payments', [InvoiceController::class, 'recordPayment'])->name('invoices.payments.store');

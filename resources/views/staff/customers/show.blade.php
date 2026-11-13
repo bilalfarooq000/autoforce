@@ -56,7 +56,12 @@
                                     <a href="{{ route('staff.vehicles.show', $vehicle) }}" class="font-medium text-red-600 hover:underline">{{ $vehicle->registration_number }}</a>
                                     <span class="text-xs text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }}) · {{ $vehicle->branch->name ?? '—' }}</span>
                                 </div>
-                                <a href="{{ route('staff.inspections.create', $vehicle) }}" class="text-xs text-gray-600 hover:underline font-medium shrink-0">+ New Inspection</a>
+                                <div class="flex items-center gap-3 shrink-0">
+                                    @if (auth()->user()->hasAnyRole(['admin', 'manager', 'service_advisor']))
+                                        <a href="{{ route('staff.invoices.quick-create', $vehicle) }}" class="text-xs text-gray-600 hover:underline font-medium">+ Quick Invoice</a>
+                                    @endif
+                                    <a href="{{ route('staff.inspections.create', $vehicle) }}" class="text-xs text-gray-600 hover:underline font-medium">+ New Inspection</a>
+                                </div>
                             </div>
 
                             <ul class="divide-y divide-gray-50">

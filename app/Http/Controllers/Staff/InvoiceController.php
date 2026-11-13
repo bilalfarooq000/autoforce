@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Payment;
 use App\Models\User;
+use App\Models\Vehicle;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -63,6 +64,35 @@ class InvoiceController extends Controller
 
     public function store(Request $request, Inspection $inspection)
     {
+        $invoice = $this->createInvoiceFromRequest($request, $inspection->vehicle_id, $inspection->vehicle->customer_id, $inspection->id);
+
+        return redirect()->route('staff.invoices.show', $invoice)
+            ->with('status', 'Invoice created. Customer emailed a copy.');
+    }
+
+    /**
+     * Walk-in / counter-sale billing: a customer needs something invoiced (a part,
+     * a quick job) without going through the full inspection -> quotation ->
+     * approval pipeline. Still tied to one of their vehicles, since every invoice
+     * belongs to a vehicle, but with no inspection behind it.
+     */
+    public function createQuick(Vehicle $vehicle)
+    {
+        $vehicle->load('customer');
+
+        return view('staff.invoices.create-quick', compact('vehicle'));
+    }
+
+    public function storeQuick(Request $request, Vehicle $vehicle)
+    {
+        $invoice = $this->createInvoiceFromRequest($request, $vehicle->id, $vehicle->customer_id, null);
+
+        return redirect()->route('staff.invoices.show', $invoice)
+            ->with('status', 'Invoice created. Customer emailed a copy.');
+    }
+
+    private function createInvoiceFromRequest(Request $request, int $vehicleId, int $customerId, ?int $inspectionId): Invoice
+    {
         $data = $request->validate([
             'items' => ['required', 'array', 'min:1'],
             'items.*.description' => ['required', 'string', 'max:255'],
@@ -81,9 +111,9 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::create([
             'invoice_number' => 'AF-'.now()->format('Ymd').'-'.Str::upper(Str::random(4)),
-            'vehicle_id' => $inspection->vehicle_id,
-            'customer_id' => $inspection->vehicle->customer_id,
-            'inspection_id' => $inspection->id,
+            'vehicle_id' => $vehicleId,
+            'customer_id' => $customerId,
+            'inspection_id' => $inspectionId,
             'subtotal' => $subtotal,
             'tax' => $tax,
             'total' => $subtotal + $tax,
@@ -105,8 +135,7 @@ class InvoiceController extends Controller
 
         NotificationService::notifyInvoiceIssued($invoice);
 
-        return redirect()->route('staff.invoices.show', $invoice)
-            ->with('status', 'Invoice created. Customer emailed a copy.');
+        return $invoice;
     }
 
     public function show(Invoice $invoice)
