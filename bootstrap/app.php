@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'branch.access' => \App\Http\Middleware\EnsureBranchAccess::class,
         ]);
+
+        // Railway (and most PaaS) terminate TLS at the edge and forward plain HTTP,
+        // so trust that edge's forwarded headers for correct scheme/IP detection.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
