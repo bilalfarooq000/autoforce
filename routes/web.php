@@ -21,7 +21,7 @@ use App\Http\Controllers\Staff\VehicleController as StaffVehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('login');
 });
 
 // Secure, token-based customer access links — no login required.
