@@ -4,6 +4,7 @@ set -e
 # Point the app's uploaded-file storage at the mounted volume, if one is attached.
 if [ -d /data ]; then
     mkdir -p /data/app/public
+    chown -R www-data:www-data /data
     rm -rf storage/app/public
     ln -sfn /data/app/public storage/app/public
 fi
