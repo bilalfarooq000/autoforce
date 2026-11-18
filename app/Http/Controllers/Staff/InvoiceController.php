@@ -34,25 +34,88 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Entry point for the "+ Create Invoice" menu action. Billing starts from the
-     * customer, not a bare job list — pick a customer, see their full record (every
-     * vehicle and job, same as the Customers hub), and initiate the invoice from there.
+     * Entry point for the "+ Create Invoice" menu action: one page covering
+     * customer, vehicle, and line items together, instead of making billing a
+     * multi-step hunt through the Customers hub first. Either side (customer,
+     * vehicle) can be an existing record or a brand-new one, same inline-create
+     * pattern already used on vehicle registration.
      */
-    public function selectCustomer(Request $request)
+    public function createGeneral(Request $request)
     {
         $user = $request->user();
         $branchId = $user->hasRole('admin') ? null : $user->branch_id;
 
         $customers = User::role('customer')
-            ->withCount('vehicles')
+            ->with(['vehicles' => fn ($q) => $q->orderBy('registration_number')])
             ->when($branchId, fn ($q) => $q->where(fn ($qq) => $qq->where('branch_id', $branchId)
                 ->orWhereHas('vehicles', fn ($v) => $v->where('branch_id', $branchId))))
-            ->when($request->search, fn ($q, $s) => $q->where(fn ($qq) => $qq->where('name', 'like', "%{$s}%")->orWhere('phone', 'like', "%{$s}%")))
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
+            ->orderBy('name')
+            ->get();
 
-        return view('staff.invoices.select', compact('customers'));
+        return view('staff.invoices.create-general', compact('customers'));
+    }
+
+    public function storeGeneral(Request $request)
+    {
+        $data = $request->validate([
+            'customer_id' => ['nullable', 'exists:users,id'],
+            'customer_name' => ['required_without:customer_id', 'nullable', 'string', 'max:255'],
+            'customer_phone' => ['required_without:customer_id', 'nullable', 'string', 'max:30', 'regex:/^(\+?92|0)3\d{2}-?\d{7}$/'],
+            'customer_email' => ['nullable', 'email', 'max:255'],
+            'vehicle_id' => ['nullable', 'exists:vehicles,id'],
+            'vehicle_registration_number' => ['required_without:vehicle_id', 'nullable', 'string', 'max:50'],
+            'vehicle_make' => ['required_without:vehicle_id', 'nullable', 'string', 'max:100'],
+            'vehicle_model' => ['required_without:vehicle_id', 'nullable', 'string', 'max:100'],
+        ]);
+
+        if (! empty($data['customer_id'])) {
+            $customer = User::role('customer')->findOrFail($data['customer_id']);
+        } else {
+            $customer = User::firstOrCreate(
+                ['phone' => $data['customer_phone']],
+                [
+                    'name' => $data['customer_name'],
+                    'email' => $data['customer_email'] ?: Str::slug($data['customer_phone']).'@customer.autoforce.local',
+                    'branch_id' => $request->user()->hasRole('admin') ? null : $request->user()->branch_id,
+                    'password' => bcrypt(Str::random(16)),
+                ]
+            );
+
+            if (! $customer->hasRole('customer')) {
+                $customer->assignRole('customer');
+            }
+
+            if ($customer->wasRecentlyCreated) {
+                NotificationService::notifyNewCustomerAccount($customer);
+            }
+        }
+
+        if (! empty($data['vehicle_id'])) {
+            $vehicle = Vehicle::where('customer_id', $customer->id)->findOrFail($data['vehicle_id']);
+        } else {
+            $existing = Vehicle::where('registration_number', $data['vehicle_registration_number'])->first();
+
+            if ($existing && $existing->customer_id !== $customer->id) {
+                return back()->withInput()->withErrors([
+                    'vehicle_registration_number' => "{$data['vehicle_registration_number']} is already registered to a different customer ({$existing->customer->name}).",
+                ]);
+            }
+
+            $vehicle = Vehicle::firstOrCreate(
+                ['registration_number' => $data['vehicle_registration_number']],
+                [
+                    'customer_id' => $customer->id,
+                    'branch_id' => $request->user()->branch_id,
+                    'make' => $data['vehicle_make'],
+                    'model' => $data['vehicle_model'],
+                ]
+            );
+        }
+
+        $invoice = $this->createInvoiceFromRequest($request, $vehicle->id, $customer->id, null);
+
+        return redirect()->route('staff.invoices.show', $invoice)
+            ->with('status', 'Invoice created. Customer emailed a copy.');
     }
 
     public function create(Inspection $inspection)
