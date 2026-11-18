@@ -4,10 +4,6 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-4">
-        @if (session('status'))
-            <div class="bg-green-50 border border-green-200 text-green-800 text-sm rounded-lg px-4 py-3">{{ session('status') }}</div>
-        @endif
-
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                 <div>
