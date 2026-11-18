@@ -25,7 +25,7 @@
                         <th class="px-4 py-3">Branch</th>
                         <th class="px-4 py-3">Mileage</th>
                         <th class="px-4 py-3">Service</th>
-                        <th class="px-4 py-3"></th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
@@ -41,8 +41,11 @@
                                     <span class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700">Due Soon</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 text-right">
-                                <a href="{{ route('staff.vehicles.show', $vehicle) }}" class="text-red-600 hover:underline">View</a>
+                            <td class="px-4 py-3">
+                                <x-action-buttons
+                                    :view="route('staff.vehicles.show', $vehicle)"
+                                    :edit="route('staff.vehicles.edit', $vehicle)"
+                                />
                             </td>
                         </tr>
                     @empty

@@ -23,12 +23,12 @@
                         <th class="px-4 py-3">Vehicles</th>
                         <th class="px-4 py-3">Total Invoiced</th>
                         <th class="px-4 py-3">Outstanding</th>
-                        <th class="px-4 py-3"></th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($customers as $customer)
-                        <tr>
+                        <tr class="{{ ! $customer->is_active ? 'opacity-50' : '' }}">
                             <td class="px-4 py-3">
                                 <div class="font-medium">{{ $customer->name }}</div>
                                 <div class="text-xs text-gray-500">{{ $customer->phone }}</div>
@@ -38,9 +38,16 @@
                             <td class="px-4 py-3 {{ $customer->total_outstanding > 0 ? 'text-red-600 font-medium' : '' }}">
                                 PKR {{ number_format($customer->total_outstanding) }}
                             </td>
-                            <td class="px-4 py-3 text-right space-x-3 whitespace-nowrap">
-                                <a href="{{ route('staff.vehicles.create', ['customer' => $customer->id]) }}" class="text-gray-600 hover:underline text-xs">+ Register Vehicle</a>
-                                <a href="{{ route('staff.customers.show', $customer) }}" class="text-red-600 hover:underline">View</a>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-3">
+                                    <a href="{{ route('staff.vehicles.create', ['customer' => $customer->id]) }}" class="text-gray-500 hover:underline text-xs whitespace-nowrap">+ Vehicle</a>
+                                    <x-action-buttons
+                                        :view="route('staff.customers.show', $customer)"
+                                        :edit="route('staff.customers.edit', $customer)"
+                                        :toggle-url="route('staff.customers.toggle', $customer)"
+                                        :active="$customer->is_active"
+                                    />
+                                </div>
                             </td>
                         </tr>
                     @empty

@@ -19,7 +19,7 @@
                         <th class="px-4 py-3">Supplier</th>
                         <th class="px-4 py-3">Date</th>
                         <th class="px-4 py-3 text-right">Total</th>
-                        <th class="px-4 py-3"></th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
@@ -29,8 +29,8 @@
                             <td class="px-4 py-3">{{ $purchase->supplier->name }}</td>
                             <td class="px-4 py-3 text-gray-500">{{ $purchase->purchased_at->format('d M Y') }}</td>
                             <td class="px-4 py-3 text-right font-medium">PKR {{ number_format($purchase->total_amount, 2) }}</td>
-                            <td class="px-4 py-3 text-right">
-                                <a href="{{ route('staff.purchases.show', $purchase) }}" class="text-xs text-red-600 hover:underline font-medium">View</a>
+                            <td class="px-4 py-3">
+                                <x-action-buttons :view="route('staff.purchases.show', $purchase)" />
                             </td>
                         </tr>
                     @empty

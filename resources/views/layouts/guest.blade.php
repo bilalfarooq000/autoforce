@@ -28,7 +28,58 @@
                     <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-24 w-auto mx-auto mb-8 drop-shadow-lg">
                     <h1 class="text-4xl font-extrabold text-white tracking-tight drop-shadow">AutoForce DMS</h1>
                     <p class="text-base text-slate-300 mt-3 max-w-sm mx-auto drop-shadow">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
+
+                    <ul class="mt-6 space-y-2 text-left max-w-sm mx-auto">
+                        <li class="flex items-start gap-2 text-sm text-slate-300 drop-shadow">
+                            <span class="text-red-500 mt-0.5">&bull;</span>
+                            <span>Multi-branch workshop, invoicing and inventory in one place.</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-sm text-slate-300 drop-shadow">
+                            <span class="text-red-500 mt-0.5">&bull;</span>
+                            <span>Built for role-based access — admin, manager, advisor, technician.</span>
+                        </li>
+                    </ul>
                 </div>
+
+                <!-- Cars pulling into the garage -->
+                <svg class="absolute bottom-0 left-0 w-full h-20 z-10" viewBox="0 0 800 110" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0" y="70" width="800" height="40" fill="#0a0a0a" />
+                    <line x1="0" y1="90" x2="800" y2="90" stroke="#dc2626" stroke-width="3" stroke-dasharray="22 16" opacity="0.8" />
+
+                    <!-- Garage -->
+                    <g transform="translate(640,28)">
+                        <rect x="0" y="10" width="130" height="60" fill="#1f2937" stroke="#dc2626" stroke-width="2"/>
+                        <polygon points="-6,10 65,-22 136,10" fill="#111827" stroke="#dc2626" stroke-width="2"/>
+                        <rect x="20" y="28" width="90" height="42" fill="#0a0a0a" stroke="#dc2626" stroke-width="1.5"/>
+                        <rect x="28" y="34" width="22" height="34" fill="#1f2937"/>
+                        <rect x="56" y="34" width="22" height="34" fill="#1f2937"/>
+                        <rect x="84" y="34" width="22" height="34" fill="#1f2937"/>
+                    </g>
+
+                    <!-- Car 1 -->
+                    <g transform="translate(60,58)">
+                        <rect x="0" y="10" width="54" height="16" rx="4" fill="#dc2626"/>
+                        <rect x="10" y="0" width="30" height="14" rx="4" fill="#dc2626"/>
+                        <circle cx="12" cy="28" r="6" fill="#111827"/>
+                        <circle cx="42" cy="28" r="6" fill="#111827"/>
+                    </g>
+
+                    <!-- Car 2 -->
+                    <g transform="translate(280,60)">
+                        <rect x="0" y="9" width="48" height="14" rx="4" fill="#e5e7eb"/>
+                        <rect x="9" y="0" width="26" height="12" rx="4" fill="#e5e7eb"/>
+                        <circle cx="11" cy="25" r="5.5" fill="#111827"/>
+                        <circle cx="37" cy="25" r="5.5" fill="#111827"/>
+                    </g>
+
+                    <!-- Car 3, closer to the garage -->
+                    <g transform="translate(480,58)">
+                        <rect x="0" y="10" width="54" height="16" rx="4" fill="#9ca3af"/>
+                        <rect x="10" y="0" width="30" height="14" rx="4" fill="#9ca3af"/>
+                        <circle cx="12" cy="28" r="6" fill="#111827"/>
+                        <circle cx="42" cy="28" r="6" fill="#111827"/>
+                    </g>
+                </svg>
             </div>
 
             <!-- Form panel -->

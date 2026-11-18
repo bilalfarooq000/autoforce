@@ -32,13 +32,14 @@
                         <th class="px-4 py-3">Total</th>
                         <th class="px-4 py-3">Balance</th>
                         <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($invoices as $invoice)
                         <tr class="hover:bg-gray-50">
                             <td class="px-4 py-3">
-                                <a href="{{ route('staff.invoices.show', $invoice) }}" class="text-red-600 hover:underline font-medium">{{ $invoice->invoice_number }}</a>
+                                <span class="font-medium">{{ $invoice->invoice_number }}</span>
                             </td>
                             <td class="px-4 py-3">{{ $invoice->vehicle->registration_number }}</td>
                             <td class="px-4 py-3">{{ $invoice->customer->name }}</td>
@@ -50,9 +51,12 @@
                                     {{ str($invoice->status)->headline() }}
                                 </span>
                             </td>
+                            <td class="px-4 py-3">
+                                <x-action-buttons :view="route('staff.invoices.show', $invoice)" />
+                            </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="px-4 py-6 text-center text-gray-500">No invoices yet.</td></tr>
+                        <tr><td colspan="8" class="px-4 py-6 text-center text-gray-500">No invoices yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>

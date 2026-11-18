@@ -36,13 +36,13 @@
                             <td class="px-4 py-3 text-gray-600 capitalize">{{ $serviceType->type }}</td>
                             <td class="px-4 py-3 text-gray-600">{{ $serviceType->branch->name ?? 'All Branches' }}</td>
                             <td class="px-4 py-3 text-right font-medium">PKR {{ number_format($serviceType->default_price, 2) }}</td>
-                            <td class="px-4 py-3 text-right whitespace-nowrap">
+                            <td class="px-4 py-3">
                                 @hasanyrole('admin|manager')
-                                    <a href="{{ route('staff.service-types.edit', $serviceType) }}" class="text-xs text-red-600 hover:underline">Edit</a>
-                                    <form method="POST" action="{{ route('staff.service-types.toggle', $serviceType) }}" class="inline">
-                                        @csrf @method('PATCH')
-                                        <button type="submit" class="text-xs text-gray-500 hover:underline ml-2">{{ $serviceType->is_active ? 'Deactivate' : 'Activate' }}</button>
-                                    </form>
+                                    <x-action-buttons
+                                        :edit="route('staff.service-types.edit', $serviceType)"
+                                        :toggle-url="route('staff.service-types.toggle', $serviceType)"
+                                        :active="$serviceType->is_active"
+                                    />
                                 @endhasanyrole
                             </td>
                         </tr>

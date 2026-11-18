@@ -36,12 +36,12 @@
                             </td>
                             <td class="px-4 py-3 text-gray-600">{{ $supplier->phone ?? $supplier->email ?? '—' }}</td>
                             <td class="px-4 py-3 text-gray-600">{{ $supplier->branch->name ?? 'All Branches' }}</td>
-                            <td class="px-4 py-3 text-right whitespace-nowrap">
-                                <a href="{{ route('staff.suppliers.edit', $supplier) }}" class="text-xs text-red-600 hover:underline">Edit</a>
-                                <form method="POST" action="{{ route('staff.suppliers.toggle', $supplier) }}" class="inline">
-                                    @csrf @method('PATCH')
-                                    <button type="submit" class="text-xs text-gray-500 hover:underline ml-2">{{ $supplier->is_active ? 'Deactivate' : 'Activate' }}</button>
-                                </form>
+                            <td class="px-4 py-3">
+                                <x-action-buttons
+                                    :edit="route('staff.suppliers.edit', $supplier)"
+                                    :toggle-url="route('staff.suppliers.toggle', $supplier)"
+                                    :active="$supplier->is_active"
+                                />
                             </td>
                         </tr>
                     @empty

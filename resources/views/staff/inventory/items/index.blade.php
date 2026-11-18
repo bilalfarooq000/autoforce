@@ -60,14 +60,14 @@
                         <th class="px-4 py-3 text-right">On Hand</th>
                         <th class="px-4 py-3 text-right">Reorder At</th>
                         <th class="px-4 py-3 text-right">Cost</th>
-                        <th class="px-4 py-3"></th>
+                        <th class="px-4 py-3 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($items as $item)
                         <tr class="hover:bg-gray-50 {{ ! $item->is_active ? 'opacity-50' : '' }}">
                             <td class="px-4 py-3">
-                                <a href="{{ route('staff.inventory.items.show', $item) }}" class="font-medium text-red-600 hover:underline">{{ $item->name }}</a>
+                                <span class="font-medium text-gray-900">{{ $item->name }}</span>
                                 <div class="text-xs text-gray-500">{{ $item->sku ?? $item->part_number ?? '—' }} @if($item->brand) · {{ $item->brand }} @endif</div>
                             </td>
                             <td class="px-4 py-3 text-gray-600">{{ $item->category->name ?? '—' }}</td>
@@ -80,12 +80,20 @@
                             </td>
                             <td class="px-4 py-3 text-right text-gray-500">{{ $item->reorder_level }}</td>
                             <td class="px-4 py-3 text-right text-gray-600">PKR {{ number_format($item->cost_price, 2) }}</td>
-                            <td class="px-4 py-3 text-right whitespace-nowrap">
-                                @hasanyrole('admin|manager|inventory_manager')
-                                    <a href="{{ route('staff.inventory.items.receive', $item) }}" class="text-xs text-green-700 hover:underline">+Stock</a>
-                                    <a href="{{ route('staff.inventory.items.issue', $item) }}" class="text-xs text-orange-700 hover:underline ml-2">Issue</a>
-                                    <a href="{{ route('staff.inventory.items.adjust', $item) }}" class="text-xs text-gray-600 hover:underline ml-2">Adjust</a>
-                                @endhasanyrole
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-2">
+                                    @hasanyrole('admin|manager|inventory_manager')
+                                        <a href="{{ route('staff.inventory.items.receive', $item) }}" class="text-xs text-green-700 hover:underline whitespace-nowrap">+Stock</a>
+                                        <a href="{{ route('staff.inventory.items.issue', $item) }}" class="text-xs text-orange-700 hover:underline whitespace-nowrap">Issue</a>
+                                        <a href="{{ route('staff.inventory.items.adjust', $item) }}" class="text-xs text-gray-600 hover:underline whitespace-nowrap">Adjust</a>
+                                    @endhasanyrole
+                                    <x-action-buttons
+                                        :view="route('staff.inventory.items.show', $item)"
+                                        :edit="auth()->user()->hasAnyRole(['admin', 'manager', 'inventory_manager']) ? route('staff.inventory.items.edit', $item) : null"
+                                        :toggle-url="auth()->user()->hasAnyRole(['admin', 'manager', 'inventory_manager']) ? route('staff.inventory.items.toggle', $item) : null"
+                                        :active="$item->is_active"
+                                    />
+                                </div>
                             </td>
                         </tr>
                     @empty
