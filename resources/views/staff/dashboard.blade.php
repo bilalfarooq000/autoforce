@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-2">
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     Workshop Dashboard @if ($viewingBranch) — {{ $viewingBranch->name }} @endif

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-2">
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $vehicle->registration_number }}</h2>
                 <p class="text-sm text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }}) · {{ $vehicle->customer->name }} · {{ $vehicle->customer->phone }}</p>

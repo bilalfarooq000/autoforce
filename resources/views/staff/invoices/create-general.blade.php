@@ -23,7 +23,7 @@
             @csrf
 
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between flex-wrap gap-2">
                     <h3 class="font-semibold text-gray-900">Customer</h3>
                     <div class="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-medium">
                         <button type="button" @click="newCustomer = false"
@@ -71,7 +71,7 @@
             </div>
 
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between flex-wrap gap-2">
                     <h3 class="font-semibold text-gray-900">Vehicle</h3>
                     <div class="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-medium">
                         <button type="button" @click="newVehicle = false"

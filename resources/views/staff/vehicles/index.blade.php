@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Vehicles</h2>
             <a href="{{ route('staff.vehicles.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700">
                 + Register Vehicle

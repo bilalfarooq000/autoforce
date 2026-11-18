@@ -35,11 +35,12 @@
         {!! $navItem(route('dashboard'), 'Dashboard', $icons['grid'], request()->routeIs('dashboard', 'staff.dashboard', 'admin.dashboard', 'customer.dashboard')) !!}
 
         @hasanyrole('admin|manager|service_advisor|technician|inventory_manager')
-            <div class="pt-3 pb-1 px-3 text-xs font-semibold text-slate-500 uppercase">Workshop</div>
             {!! $navItem(route('staff.action-center.index'), 'Action Center', $icons['alert'], request()->routeIs('staff.action-center.*')) !!}
-            {!! $navItem(route('staff.bookings.index'), 'Bookings', $icons['clock'], request()->routeIs('staff.bookings.*')) !!}
+
+            <div class="pt-3 pb-1 px-3 text-xs font-semibold text-slate-500 uppercase">Workshop</div>
             {!! $navItem(route('staff.customers.index'), 'Customers', $icons['users'], request()->routeIs('staff.customers.*')) !!}
             {!! $navItem(route('staff.vehicles.index'), 'Vehicles', $icons['car'], request()->routeIs('staff.vehicles.*', 'staff.inspections.*')) !!}
+            {!! $navItem(route('staff.bookings.index'), 'Bookings', $icons['clock'], request()->routeIs('staff.bookings.*')) !!}
             {!! $navItem(route('staff.invoices.index'), 'Invoices', $icons['receipt'], request()->routeIs('staff.invoices.*')) !!}
             {!! $navItem(route('staff.service-types.index'), 'Service Types', $icons['receipt'], request()->routeIs('staff.service-types.*')) !!}
             {!! $navItem(route('staff.finance.index'), 'Finance', $icons['cash'], request()->routeIs('staff.finance.*')) !!}
@@ -47,9 +48,9 @@
             <div class="pt-3 pb-1 px-3 text-xs font-semibold text-slate-500 uppercase">Inventory</div>
             {!! $navItem(route('staff.inventory.items.index'), 'Stock', $icons['box'], request()->routeIs('staff.inventory.items.*')) !!}
             {!! $navItem(route('staff.inventory.movements.index'), 'Movements', $icons['clock'], request()->routeIs('staff.inventory.movements.*')) !!}
-            {!! $navItem(route('staff.inventory.reports.index'), 'Reports', $icons['cash'], request()->routeIs('staff.inventory.reports.*')) !!}
             {!! $navItem(route('staff.purchases.index'), 'Purchases', $icons['receipt'], request()->routeIs('staff.purchases.*')) !!}
             {!! $navItem(route('staff.suppliers.index'), 'Suppliers', $icons['building'], request()->routeIs('staff.suppliers.*')) !!}
+            {!! $navItem(route('staff.inventory.reports.index'), 'Reports', $icons['cash'], request()->routeIs('staff.inventory.reports.*')) !!}
         @endhasanyrole
 
         @hasrole('admin')

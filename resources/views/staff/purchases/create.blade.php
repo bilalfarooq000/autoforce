@@ -16,7 +16,7 @@
             @csrf
 
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between flex-wrap gap-2">
                     <label class="block text-xs font-medium text-gray-500">Supplier</label>
                     <a href="{{ route('staff.suppliers.create') }}" class="text-xs text-red-600 hover:underline">+ New Supplier</a>
                 </div>

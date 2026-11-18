@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Invoice {{ $invoice->invoice_number }}</h2>
             <a href="{{ route('staff.invoices.pdf', $invoice) }}" class="px-4 py-2 bg-gray-800 text-white rounded-md text-sm">Download PDF</a>
         </div>
