@@ -47,6 +47,8 @@
             {!! $navItem(route('staff.inventory.items.index'), 'Stock', $icons['box'], request()->routeIs('staff.inventory.items.*')) !!}
             {!! $navItem(route('staff.inventory.movements.index'), 'Movements', $icons['clock'], request()->routeIs('staff.inventory.movements.*')) !!}
             {!! $navItem(route('staff.inventory.reports.index'), 'Reports', $icons['cash'], request()->routeIs('staff.inventory.reports.*')) !!}
+            {!! $navItem(route('staff.purchases.index'), 'Purchases', $icons['receipt'], request()->routeIs('staff.purchases.*')) !!}
+            {!! $navItem(route('staff.suppliers.index'), 'Suppliers', $icons['building'], request()->routeIs('staff.suppliers.*')) !!}
         @endhasanyrole
 
         @hasrole('admin')

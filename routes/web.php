@@ -16,7 +16,9 @@ use App\Http\Controllers\Staff\InspectionController;
 use App\Http\Controllers\Staff\InventoryItemController;
 use App\Http\Controllers\Staff\InventoryMovementController;
 use App\Http\Controllers\Staff\InventoryReportController;
+use App\Http\Controllers\Staff\PurchaseController;
 use App\Http\Controllers\Staff\ServiceTypeController;
+use App\Http\Controllers\Staff\SupplierController;
 use App\Http\Controllers\Staff\InvoiceController;
 use App\Http\Controllers\Staff\QuotationController;
 use App\Http\Controllers\Staff\VehicleController as StaffVehicleController;
@@ -165,6 +167,31 @@ Route::middleware(['auth', 'role:admin|manager|service_advisor|technician|invent
                 Route::get('/items/{stockItem}/adjust', [InventoryMovementController::class, 'adjust'])->name('items.adjust');
                 Route::post('/items/{stockItem}/adjust', [InventoryMovementController::class, 'storeAdjust'])->name('items.adjust.store');
             });
+        });
+
+        // Suppliers & Purchases — recording a purchase automatically receives the
+        // stock into Inventory, so there's no separate "Receive Stock" step for it.
+        Route::prefix('suppliers')->name('suppliers.')->group(function () {
+            Route::get('/', [SupplierController::class, 'index'])->name('index');
+
+            Route::middleware('role:admin|manager|inventory_manager')->group(function () {
+                Route::get('/create', [SupplierController::class, 'create'])->name('create');
+                Route::post('/', [SupplierController::class, 'store'])->name('store');
+                Route::get('/{supplier}/edit', [SupplierController::class, 'edit'])->name('edit');
+                Route::put('/{supplier}', [SupplierController::class, 'update'])->name('update');
+                Route::patch('/{supplier}/toggle', [SupplierController::class, 'toggle'])->name('toggle');
+            });
+        });
+
+        Route::prefix('purchases')->name('purchases.')->group(function () {
+            Route::get('/', [PurchaseController::class, 'index'])->name('index');
+
+            Route::middleware('role:admin|manager|inventory_manager')->group(function () {
+                Route::get('/create', [PurchaseController::class, 'create'])->name('create');
+                Route::post('/', [PurchaseController::class, 'store'])->name('store');
+            });
+
+            Route::get('/{purchase}', [PurchaseController::class, 'show'])->name('show');
         });
     });
 
