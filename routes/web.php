@@ -16,6 +16,7 @@ use App\Http\Controllers\Staff\InspectionController;
 use App\Http\Controllers\Staff\InventoryItemController;
 use App\Http\Controllers\Staff\InventoryMovementController;
 use App\Http\Controllers\Staff\InventoryReportController;
+use App\Http\Controllers\Staff\ServiceTypeController;
 use App\Http\Controllers\Staff\InvoiceController;
 use App\Http\Controllers\Staff\QuotationController;
 use App\Http\Controllers\Staff\VehicleController as StaffVehicleController;
@@ -94,6 +95,21 @@ Route::middleware(['auth', 'role:admin|manager|service_advisor|technician|invent
         });
 
         Route::get('/action-center', [ActionCenterController::class, 'index'])->name('action-center.index');
+
+        // Reusable priced line items ("Full Service", "Oil Change") so invoices and
+        // quotations don't need every description/price typed out from scratch.
+        Route::prefix('service-types')->name('service-types.')->group(function () {
+            Route::get('/', [ServiceTypeController::class, 'index'])->name('index');
+            Route::get('/picker', [ServiceTypeController::class, 'picker'])->name('picker');
+
+            Route::middleware('role:admin|manager')->group(function () {
+                Route::get('/create', [ServiceTypeController::class, 'create'])->name('create');
+                Route::post('/', [ServiceTypeController::class, 'store'])->name('store');
+                Route::get('/{serviceType}/edit', [ServiceTypeController::class, 'edit'])->name('edit');
+                Route::put('/{serviceType}', [ServiceTypeController::class, 'update'])->name('update');
+                Route::patch('/{serviceType}/toggle', [ServiceTypeController::class, 'toggle'])->name('toggle');
+            });
+        });
 
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
         Route::get('/inspections/{inspection}/invoice/create', [InvoiceController::class, 'create'])->name('invoices.create');

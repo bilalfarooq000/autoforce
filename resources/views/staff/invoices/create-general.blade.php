@@ -17,7 +17,7 @@
     @endphp
 
     <div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8"
-         x-data="invoiceCreateForm({{ Js::from($customersPayload) }}, {{ Js::from($initialItems) }})"
+         x-data="invoiceCreateForm({{ Js::from($customersPayload) }}, {{ Js::from($initialItems) }}, {{ Js::from($serviceTypes) }})"
          @submit="if (!items.length) $event.preventDefault()">
         <form method="POST" action="{{ route('staff.invoices.store-general') }}" class="space-y-4">
             @csrf
@@ -173,11 +173,23 @@
                     </table>
                 </div>
 
-                <button type="button" @click="addRow()"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Add Row
-                </button>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" @click="addRow()"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Row
+                    </button>
+
+                    <template x-if="serviceTypes.length">
+                        <select @change="addFromServiceType($event.target.value); $event.target.value = ''"
+                                class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
+                            <option value="">+ Add from Service Type…</option>
+                            <template x-for="s in serviceTypes" :key="s.id">
+                                <option :value="s.id" x-text="s.name + ' — PKR ' + Number(s.default_price).toLocaleString()"></option>
+                            </template>
+                        </select>
+                    </template>
+                </div>
 
                 <div class="flex justify-end">
                     <div class="w-full sm:w-72 space-y-2 text-sm">
@@ -205,10 +217,11 @@
     </div>
 
     <script>
-        function invoiceCreateForm(customers, initialItems) {
+        function invoiceCreateForm(customers, initialItems, serviceTypes) {
             return {
                 customers: customers,
                 items: initialItems,
+                serviceTypes: serviceTypes,
                 tax: 0,
                 newCustomer: false,
                 newVehicle: false,
@@ -224,6 +237,11 @@
                 },
                 addRow() {
                     this.items.push({ description: '', type: 'part', quantity: 1, unit_price: 0, warranty_months: null });
+                },
+                addFromServiceType(id) {
+                    const service = this.serviceTypes.find(s => String(s.id) === String(id));
+                    if (!service) return;
+                    this.items.push({ description: service.name, type: service.type, quantity: 1, unit_price: Number(service.default_price), warranty_months: null });
                 },
                 removeRow(index) {
                     this.items.splice(index, 1);

@@ -7,6 +7,7 @@ use App\Models\Inspection;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Payment;
+use App\Models\ServiceType;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\NotificationService;
@@ -52,7 +53,12 @@ class InvoiceController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('staff.invoices.create-general', compact('customers'));
+        $serviceTypes = ServiceType::where('is_active', true)
+            ->when($branchId, fn ($q) => $q->where(fn ($qq) => $qq->where('branch_id', $branchId)->orWhereNull('branch_id')))
+            ->orderBy('name')
+            ->get(['id', 'name', 'type', 'default_price']);
+
+        return view('staff.invoices.create-general', compact('customers', 'serviceTypes'));
     }
 
     public function storeGeneral(Request $request)
@@ -152,7 +158,12 @@ class InvoiceController extends Controller
     {
         $vehicle->load('customer');
 
-        return view('staff.invoices.create-quick', compact('vehicle'));
+        $serviceTypes = ServiceType::where('is_active', true)
+            ->when($vehicle->branch_id, fn ($q) => $q->where(fn ($qq) => $qq->where('branch_id', $vehicle->branch_id)->orWhereNull('branch_id')))
+            ->orderBy('name')
+            ->get(['id', 'name', 'type', 'default_price']);
+
+        return view('staff.invoices.create-quick', compact('vehicle', 'serviceTypes'));
     }
 
     public function storeQuick(Request $request, Vehicle $vehicle)
