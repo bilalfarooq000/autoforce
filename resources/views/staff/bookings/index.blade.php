@@ -2,9 +2,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Bookings</h2>
-            <a href="{{ route('staff.bookings.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
-                + New Booking
-            </a>
+            @hasanyrole('admin|manager|service_advisor')
+                <a href="{{ route('staff.bookings.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
+                    + New Booking
+                </a>
+            @endhasanyrole
         </div>
     </x-slot>
 
@@ -61,19 +63,21 @@
                             </td>
                             <td class="px-4 py-3 text-right whitespace-nowrap">
                                 @if (in_array($booking->status, ['pending', 'confirmed']))
-                                    @if ($booking->status === 'pending')
+                                    @hasanyrole('admin|manager|service_advisor')
+                                        @if ($booking->status === 'pending')
+                                            <form method="POST" action="{{ route('staff.bookings.status', $booking) }}" class="inline">
+                                                @csrf @method('PATCH')
+                                                <input type="hidden" name="status" value="confirmed">
+                                                <button type="submit" class="text-xs text-blue-600 hover:underline">Confirm</button>
+                                            </form>
+                                        @endif
+                                        <a href="{{ route('staff.bookings.convert.create', $booking) }}" class="text-xs text-red-600 hover:underline ml-2">Check In</a>
                                         <form method="POST" action="{{ route('staff.bookings.status', $booking) }}" class="inline">
                                             @csrf @method('PATCH')
-                                            <input type="hidden" name="status" value="confirmed">
-                                            <button type="submit" class="text-xs text-blue-600 hover:underline">Confirm</button>
+                                            <input type="hidden" name="status" value="cancelled">
+                                            <button type="submit" class="text-xs text-gray-500 hover:underline ml-2">Cancel</button>
                                         </form>
-                                    @endif
-                                    <a href="{{ route('staff.bookings.convert.create', $booking) }}" class="text-xs text-red-600 hover:underline ml-2">Check In</a>
-                                    <form method="POST" action="{{ route('staff.bookings.status', $booking) }}" class="inline">
-                                        @csrf @method('PATCH')
-                                        <input type="hidden" name="status" value="cancelled">
-                                        <button type="submit" class="text-xs text-gray-500 hover:underline ml-2">Cancel</button>
-                                    </form>
+                                    @endhasanyrole
                                 @elseif ($booking->inspection_id)
                                     <a href="{{ route('staff.inspections.show', $booking->inspection_id) }}" class="text-xs text-red-600 hover:underline">View Job</a>
                                 @endif

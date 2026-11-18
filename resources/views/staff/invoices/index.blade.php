@@ -2,9 +2,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Invoices</h2>
-            <a href="{{ route('staff.invoices.select') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
-                + Create Invoice
-            </a>
+            @hasanyrole('admin|manager|service_advisor')
+                <a href="{{ route('staff.invoices.select') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
+                    + Create Invoice
+                </a>
+            @endhasanyrole
         </div>
     </x-slot>
 

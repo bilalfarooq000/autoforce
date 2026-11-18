@@ -2,9 +2,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Suppliers</h2>
-            <a href="{{ route('staff.suppliers.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
-                + Add Supplier
-            </a>
+            @hasanyrole('admin|manager|inventory_manager')
+                <a href="{{ route('staff.suppliers.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
+                    + Add Supplier
+                </a>
+            @endhasanyrole
         </div>
     </x-slot>
 
@@ -37,11 +39,13 @@
                             <td class="px-4 py-3 text-gray-600">{{ $supplier->phone ?? $supplier->email ?? '—' }}</td>
                             <td class="px-4 py-3 text-gray-600">{{ $supplier->branch->name ?? 'All Branches' }}</td>
                             <td class="px-4 py-3">
-                                <x-action-buttons
-                                    :edit="route('staff.suppliers.edit', $supplier)"
-                                    :toggle-url="route('staff.suppliers.toggle', $supplier)"
-                                    :active="$supplier->is_active"
-                                />
+                                @hasanyrole('admin|manager|inventory_manager')
+                                    <x-action-buttons
+                                        :edit="route('staff.suppliers.edit', $supplier)"
+                                        :toggle-url="route('staff.suppliers.toggle', $supplier)"
+                                        :active="$supplier->is_active"
+                                    />
+                                @endhasanyrole
                             </td>
                         </tr>
                     @empty

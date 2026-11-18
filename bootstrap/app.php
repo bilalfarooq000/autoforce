@@ -22,6 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // Railway (and most PaaS) terminate TLS at the edge and forward plain HTTP,
         // so trust that edge's forwarded headers for correct scheme/IP detection.
         $middleware->trustProxies(at: '*');
+
+        // A page visited before a deploy can otherwise come back blank on
+        // browser back/forward - restored from bfcache instead of re-fetched,
+        // referencing a previous deploy's hashed assets.
+        $middleware->appendToGroup('web', \App\Http\Middleware\PreventStaleCache::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
