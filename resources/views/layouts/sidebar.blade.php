@@ -37,6 +37,7 @@
         @hasanyrole('admin|manager|service_advisor|technician|inventory_manager')
             <div class="pt-3 pb-1 px-3 text-xs font-semibold text-slate-500 uppercase">Workshop</div>
             {!! $navItem(route('staff.action-center.index'), 'Action Center', $icons['alert'], request()->routeIs('staff.action-center.*')) !!}
+            {!! $navItem(route('staff.bookings.index'), 'Bookings', $icons['clock'], request()->routeIs('staff.bookings.*')) !!}
             {!! $navItem(route('staff.customers.index'), 'Customers', $icons['users'], request()->routeIs('staff.customers.*')) !!}
             {!! $navItem(route('staff.vehicles.index'), 'Vehicles', $icons['car'], request()->routeIs('staff.vehicles.*', 'staff.inspections.*')) !!}
             {!! $navItem(route('staff.invoices.index'), 'Invoices', $icons['receipt'], request()->routeIs('staff.invoices.*')) !!}

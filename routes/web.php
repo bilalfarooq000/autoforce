@@ -6,9 +6,11 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Customer\VehicleController as CustomerVehicleController;
+use App\Http\Controllers\Portal\PublicBookingController;
 use App\Http\Controllers\Portal\PublicInspectionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Staff\ActionCenterController;
+use App\Http\Controllers\Staff\BookingController;
 use App\Http\Controllers\Staff\CustomerController as StaffCustomerController;
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\Staff\FinanceController;
@@ -33,6 +35,10 @@ Route::prefix('portal')->name('portal.')->group(function () {
     Route::get('/i/{token}', [PublicInspectionController::class, 'show'])->name('inspection');
     Route::post('/i/{token}/quotations/{quotation}/decision', [PublicInspectionController::class, 'decide'])->name('quotation.decide');
 });
+
+// Public booking page — no login, shared with customers directly (website, WhatsApp).
+Route::get('/book/{branch}', [PublicBookingController::class, 'show'])->name('portal.book.show');
+Route::post('/book/{branch}', [PublicBookingController::class, 'store'])->name('portal.book.store');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
@@ -97,6 +103,18 @@ Route::middleware(['auth', 'role:admin|manager|service_advisor|technician|invent
         });
 
         Route::get('/action-center', [ActionCenterController::class, 'index'])->name('action-center.index');
+
+        Route::prefix('bookings')->name('bookings.')->group(function () {
+            Route::get('/', [BookingController::class, 'index'])->name('index');
+
+            Route::middleware('role:admin|manager|service_advisor')->group(function () {
+                Route::get('/create', [BookingController::class, 'create'])->name('create');
+                Route::post('/', [BookingController::class, 'store'])->name('store');
+                Route::patch('/{booking}/status', [BookingController::class, 'updateStatus'])->name('status');
+                Route::get('/{booking}/convert', [BookingController::class, 'showConvert'])->name('convert.create');
+                Route::post('/{booking}/convert', [BookingController::class, 'convertToJob'])->name('convert.store');
+            });
+        });
 
         // Reusable priced line items ("Full Service", "Oil Change") so invoices and
         // quotations don't need every description/price typed out from scratch.
