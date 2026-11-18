@@ -28,6 +28,7 @@
                 'cash' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 10v2M3 12a9 9 0 1018 0 9 9 0 00-18 0z"/></svg>',
                 'receipt' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-6 4h6m-6 4h4M5 3h14a1 1 0 011 1v16l-3-2-2 2-2-2-2 2-2-2-2 2-2-2-3 2V4a1 1 0 011-1z"/></svg>',
                 'box' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7.5l-8-4-8 4m16 0l-8 4m8-4v9l-8 4m0-9L4 7.5m8 4v9m-8-9v9l8 4"/></svg>',
+                'alert' => '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>',
             ];
         @endphp
 
@@ -35,6 +36,7 @@
 
         @hasanyrole('admin|manager|service_advisor|technician|inventory_manager')
             <div class="pt-3 pb-1 px-3 text-xs font-semibold text-slate-500 uppercase">Workshop</div>
+            {!! $navItem(route('staff.action-center.index'), 'Action Center', $icons['alert'], request()->routeIs('staff.action-center.*')) !!}
             {!! $navItem(route('staff.customers.index'), 'Customers', $icons['users'], request()->routeIs('staff.customers.*')) !!}
             {!! $navItem(route('staff.vehicles.index'), 'Vehicles', $icons['car'], request()->routeIs('staff.vehicles.*', 'staff.inspections.*')) !!}
             {!! $navItem(route('staff.invoices.index'), 'Invoices', $icons['receipt'], request()->routeIs('staff.invoices.*')) !!}

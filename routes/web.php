@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\DashboardController as CustomerDashboardContro
 use App\Http\Controllers\Customer\VehicleController as CustomerVehicleController;
 use App\Http\Controllers\Portal\PublicInspectionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Staff\ActionCenterController;
 use App\Http\Controllers\Staff\CustomerController as StaffCustomerController;
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\Staff\FinanceController;
@@ -91,6 +92,8 @@ Route::middleware(['auth', 'role:admin|manager|service_advisor|technician|invent
             Route::post('/inspections/{inspection}/quotation', [QuotationController::class, 'store'])->name('quotations.store');
             Route::post('/inspections/{inspection}/quotation/{quotation}/decision', [QuotationController::class, 'recordDecision'])->name('quotations.decision');
         });
+
+        Route::get('/action-center', [ActionCenterController::class, 'index'])->name('action-center.index');
 
         Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
         Route::get('/inspections/{inspection}/invoice/create', [InvoiceController::class, 'create'])->name('invoices.create');
