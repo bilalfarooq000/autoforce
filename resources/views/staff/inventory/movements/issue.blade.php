@@ -13,7 +13,7 @@
             @csrf
             <div>
                 <x-input-label for="quantity" value="Quantity to Issue" />
-                <x-text-input id="quantity" name="quantity" type="number" min="1" max="{{ $item->quantity_on_hand }}" class="block mt-1 w-full" required autofocus />
+                <x-text-input id="quantity" name="quantity" type="number" min="1" max="{{ $item->quantity_on_hand }}" class="block mt-1 w-full" :value="old('quantity')" required autofocus />
                 <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
             </div>
             <div>
@@ -21,14 +21,14 @@
                 <select id="inspection_id" name="inspection_id" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm">
                     <option value="">Not tied to a specific job</option>
                     @foreach ($openJobs as $job)
-                        <option value="{{ $job->id }}">{{ $job->vehicle->registration_number ?? '—' }} — {{ $job->reason }} ({{ $job->statusLabel() }})</option>
+                        <option value="{{ $job->id }}" @selected(old('inspection_id') == $job->id)>{{ $job->vehicle->registration_number ?? '—' }} — {{ $job->reason }} ({{ $job->statusLabel() }})</option>
                     @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('inspection_id')" class="mt-2" />
             </div>
             <div>
                 <x-input-label for="reference" value="Note (optional)" />
-                <x-text-input id="reference" name="reference" class="block mt-1 w-full" />
+                <x-text-input id="reference" name="reference" class="block mt-1 w-full" :value="old('reference')" />
             </div>
             <div class="flex justify-end gap-3">
                 <a href="{{ route('staff.inventory.items.show', $item) }}" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">Cancel</a>

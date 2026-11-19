@@ -14,19 +14,19 @@
             <div>
                 <x-input-label value="Direction" />
                 <div class="flex gap-4 mt-1">
-                    <label class="flex items-center gap-1.5 text-sm"><input type="radio" name="direction" value="in" checked> Increase (found extra stock)</label>
-                    <label class="flex items-center gap-1.5 text-sm"><input type="radio" name="direction" value="out"> Decrease (damaged / lost)</label>
+                    <label class="flex items-center gap-1.5 text-sm"><input type="radio" name="direction" value="in" @checked(old('direction', 'in') === 'in')> Increase (found extra stock)</label>
+                    <label class="flex items-center gap-1.5 text-sm"><input type="radio" name="direction" value="out" @checked(old('direction') === 'out')> Decrease (damaged / lost)</label>
                 </div>
                 <x-input-error :messages="$errors->get('direction')" class="mt-2" />
             </div>
             <div>
                 <x-input-label for="quantity" value="Quantity" />
-                <x-text-input id="quantity" name="quantity" type="number" min="1" class="block mt-1 w-full" required autofocus />
+                <x-text-input id="quantity" name="quantity" type="number" min="1" class="block mt-1 w-full" :value="old('quantity')" required autofocus />
                 <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
             </div>
             <div>
                 <x-input-label for="reference" value="Reason" />
-                <x-text-input id="reference" name="reference" class="block mt-1 w-full" required placeholder="e.g. Stock-take correction, damaged in transit" />
+                <x-text-input id="reference" name="reference" class="block mt-1 w-full" :value="old('reference')" required placeholder="e.g. Stock-take correction, damaged in transit" />
                 <x-input-error :messages="$errors->get('reference')" class="mt-2" />
             </div>
             <div class="flex justify-end gap-3">
