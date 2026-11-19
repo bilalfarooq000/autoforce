@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <form method="GET" class="flex gap-2">
+        <form method="GET" class="flex flex-wrap gap-2">
             @if ($branches->count())
                 <select name="branch" class="rounded-md border-gray-300 shadow-sm text-sm" onchange="this.form.submit()">
                     <option value="">All branches</option>
@@ -41,6 +41,7 @@
         </form>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -75,6 +76,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
         {{ $invoices->links() }}
     </div>

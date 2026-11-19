@@ -65,6 +65,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                 <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Technician Performance</div>
+                <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                         <tr><th class="px-4 py-3">Technician</th><th class="px-4 py-3">Active</th><th class="px-4 py-3">Completed</th><th class="px-4 py-3">Avg Turnaround</th></tr>
@@ -82,10 +83,11 @@
                         @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
 
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800 flex justify-between items-center">
+                <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800 flex flex-wrap justify-between items-center gap-2">
                     <span>Vehicles Due for Service</span>
                     @hasrole('admin')
                         <form method="POST" action="{{ route('admin.service-reminders.run') }}">
@@ -96,7 +98,7 @@
                 </div>
                 <ul class="divide-y">
                     @forelse ($vehiclesDueService as $vehicle)
-                        <li class="px-4 py-3 flex justify-between items-center">
+                        <li class="px-4 py-3 flex flex-wrap justify-between items-center gap-2">
                             <div>
                                 <a href="{{ route('staff.vehicles.show', $vehicle) }}" class="font-medium text-red-600 hover:underline">{{ $vehicle->registration_number }}</a>
                                 <div class="text-xs text-gray-500">{{ $vehicle->customer->name }} · {{ $vehicle->customer->phone }}</div>

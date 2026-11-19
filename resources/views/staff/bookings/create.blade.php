@@ -24,7 +24,7 @@
                        class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">Phone</label>
                     <input type="text" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="03XX-XXXXXXX" required
@@ -37,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">Vehicle Reg</label>
                     <input type="text" name="vehicle_registration_number" value="{{ old('vehicle_registration_number') }}"

@@ -5,7 +5,7 @@
 
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 items-start">
-            <div class="h-[32rem]">
+            <div class="h-64 lg:h-[32rem]">
                 @include('staff.customers._sidebar', ['activeId' => $customer->id])
             </div>
 

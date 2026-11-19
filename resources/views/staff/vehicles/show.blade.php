@@ -17,11 +17,11 @@
     <div x-data="{ tab: 'overview' }" class="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-6">
 
         <!-- Vehicle profile card — always visible -->
-        <div class="bg-white rounded-lg shadow p-4 flex gap-4">
+        <div class="bg-white rounded-lg shadow p-4 flex flex-wrap gap-4">
             @if ($vehicle->photo_path)
                 <img src="{{ asset('storage/'.$vehicle->photo_path) }}" class="w-28 h-28 object-cover rounded-md border" />
             @endif
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm flex-1">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm flex-1 min-w-[16rem]">
                 <div><div class="text-gray-500">Type / Fuel</div><div class="font-medium">{{ ucfirst($vehicle->vehicle_type) }} · {{ ucfirst($vehicle->fuel_type) }}</div></div>
                 <div><div class="text-gray-500">Transmission</div><div class="font-medium">{{ ucfirst($vehicle->transmission) }}</div></div>
                 <div><div class="text-gray-500">Chassis No.</div><div class="font-medium">{{ $vehicle->chassis_number ?: '—' }}</div></div>
@@ -54,7 +54,7 @@
 
         <!-- Tabs -->
         <div class="border-b border-gray-200">
-            <nav class="flex gap-6 -mb-px">
+            <nav class="flex gap-6 -mb-px overflow-x-auto whitespace-nowrap">
                 @foreach ([
                     'overview' => 'Overview / Timeline',
                     'inspections' => 'Inspection Sheets ('.$vehicle->inspections->count().')',
@@ -101,7 +101,7 @@
         <div x-show="tab === 'inspections'" x-cloak class="space-y-3">
             @forelse ($vehicle->inspections as $inspection)
                 <div x-data="{ open: false }" class="bg-white rounded-lg shadow">
-                    <button @click="open = ! open" class="w-full px-4 py-3 flex justify-between items-center text-left">
+                    <button @click="open = ! open" class="w-full px-4 py-3 flex flex-wrap justify-between items-center gap-2 text-left">
                         <div>
                             <div class="font-medium text-gray-800">{{ $inspection->reason }}</div>
                             <div class="text-xs text-gray-500">{{ $inspection->created_at->format('d M Y') }} · {{ $inspection->technician->name ?? 'Unassigned' }} · {{ $inspection->items->where('is_checked', true)->count() }}/{{ $inspection->items->count() }} checklist items checked</div>
@@ -228,7 +228,7 @@
 
                         <!-- Invoice -->
                         @if ($inspection->invoice)
-                            <div class="flex justify-between items-center bg-gray-50 rounded-md p-3 text-sm">
+                            <div class="flex flex-wrap justify-between items-center gap-2 bg-gray-50 rounded-md p-3 text-sm">
                                 <div>
                                     <div class="font-medium">Invoice {{ $inspection->invoice->invoice_number }}</div>
                                     <div class="text-xs text-gray-500">PKR {{ number_format($inspection->invoice->total) }} · {{ str($inspection->invoice->status)->headline() }}</div>
@@ -249,7 +249,7 @@
         <div x-show="tab === 'invoices'" x-cloak class="bg-white rounded-lg shadow">
             <ul class="divide-y">
                 @forelse ($vehicle->invoices as $invoice)
-                    <li class="px-4 py-3 flex justify-between items-center">
+                    <li class="px-4 py-3 flex flex-wrap justify-between items-center gap-2">
                         <div>
                             <a href="{{ route('staff.invoices.show', $invoice) }}" class="font-medium text-red-600 hover:underline">
                                 {{ $invoice->invoice_number }}
@@ -276,7 +276,7 @@
                 <ul class="divide-y text-sm">
                     @forelse ($vehicle->notifications as $n)
                         <li class="px-4 py-2">
-                            <div class="flex justify-between">
+                            <div class="flex flex-wrap justify-between gap-1">
                                 <span class="font-medium">{{ str($n->type)->headline() }}</span>
                                 <span class="text-xs text-gray-400">{{ $n->channel }} · {{ $n->status }}</span>
                             </div>

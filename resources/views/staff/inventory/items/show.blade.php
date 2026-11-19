@@ -6,7 +6,7 @@
                 <p class="text-sm text-gray-500">{{ $item->category->name ?? '—' }} · {{ $item->branch->name ?? '—' }} @if(! $item->is_active) · <span class="text-red-600 font-medium">Inactive</span> @endif</p>
             </div>
             @hasanyrole('admin|manager|inventory_manager')
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2">
                     <a href="{{ route('staff.inventory.items.receive', $item) }}" class="px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700">+ Receive Stock</a>
                     <a href="{{ route('staff.inventory.items.issue', $item) }}" class="px-3 py-2 bg-orange-600 text-white rounded-lg text-sm font-medium hover:bg-orange-700">Issue Stock</a>
                     <a href="{{ route('staff.inventory.items.adjust', $item) }}" class="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">Adjust</a>
@@ -51,6 +51,7 @@
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Movement History</div>
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -84,6 +85,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </x-app-layout>

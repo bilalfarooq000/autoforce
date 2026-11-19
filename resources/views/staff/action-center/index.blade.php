@@ -24,6 +24,7 @@
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Overdue Invoices <span class="text-xs font-normal text-gray-400">(7+ days since issued, still unpaid)</span></div>
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -52,10 +53,12 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Pending Approvals</div>
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -82,10 +85,12 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Low Stock Alerts</div>
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -112,6 +117,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </x-app-layout>

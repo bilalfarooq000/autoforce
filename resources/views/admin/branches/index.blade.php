@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Branches</h2>
             <a href="{{ route('admin.branches.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700">
                 + Register Branch
@@ -26,7 +26,7 @@
                             <a href="{{ route('admin.branches.edit', $branch) }}" class="text-xs text-red-600 hover:underline">Edit</a>
                         </div>
                     </div>
-                    <div class="grid grid-cols-4 gap-2 mt-4 text-center">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 text-center">
                         <div class="bg-gray-50 rounded-md p-2">
                             <div class="text-lg font-bold">{{ $branch->users_count }}</div>
                             <div class="text-xs text-gray-500">Staff</div>

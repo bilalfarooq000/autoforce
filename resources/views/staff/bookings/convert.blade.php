@@ -9,7 +9,7 @@
         <form method="POST" action="{{ route('staff.bookings.convert.store', $booking) }}" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
             @csrf
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-500 mb-1">Vehicle Reg</label>
                     <input type="text" name="vehicle_registration_number" value="{{ old('vehicle_registration_number', $booking->vehicle_registration_number) }}" required

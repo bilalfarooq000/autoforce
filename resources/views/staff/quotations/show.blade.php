@@ -78,7 +78,7 @@
                     </div>
                     <ul class="divide-y divide-gray-100">
                         @foreach ($q->items as $qi)
-                            <li class="px-4 py-3 flex items-center justify-between gap-3">
+                            <li class="px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                                 <div>
                                     <div class="font-medium text-sm">{{ $qi->description }}</div>
                                     <div class="text-xs text-gray-500">
@@ -87,7 +87,7 @@
                                         @if ($qi->completed_at) · completed {{ $qi->completed_at->diffForHumans() }} @endif
                                     </div>
                                 </div>
-                                <div class="flex gap-1 shrink-0">
+                                <div class="flex flex-wrap gap-1">
                                     @foreach (\App\Models\QuotationItem::STATUSES as $value => $label)
                                         <form method="POST" action="{{ route('staff.quotations.items.status', [$inspection, $qi]) }}">
                                             @csrf @method('PATCH')

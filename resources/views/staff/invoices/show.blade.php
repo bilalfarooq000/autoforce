@@ -8,7 +8,7 @@
 
     <div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
         <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex justify-between mb-6">
+            <div class="flex flex-wrap justify-between gap-3 mb-6">
                 <div>
                     <div class="font-semibold">{{ $invoice->customer->name }}</div>
                     <div class="text-sm text-gray-500">{{ $invoice->customer->phone }}</div>
@@ -22,6 +22,7 @@
                 </div>
             </div>
 
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="text-left text-gray-500 border-b"><tr><th class="py-2">Description</th><th>Type</th><th>Qty</th><th>Warranty</th><th class="text-right">Amount</th></tr></thead>
                 <tbody class="divide-y">
@@ -36,6 +37,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
 
             <div class="flex justify-end mt-4">
                 <div class="w-56 text-sm space-y-1">
@@ -52,7 +54,7 @@
             <div class="px-4 py-3 border-b font-semibold text-gray-700">Payments</div>
             <ul class="divide-y text-sm">
                 @forelse ($invoice->payments as $payment)
-                    <li class="px-4 py-2 flex justify-between">
+                    <li class="px-4 py-2 flex flex-wrap justify-between gap-1">
                         <span>PKR {{ number_format($payment->amount) }} — {{ str($payment->method)->headline() }} {{ $payment->reference ? "(#{$payment->reference})" : '' }}</span>
                         <span class="text-xs text-gray-400">{{ $payment->paid_at->format('d M Y, h:i A') }} · {{ $payment->receiver->name ?? '—' }}</span>
                     </li>

@@ -23,12 +23,12 @@
 
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 items-start">
-            <div class="h-[40rem]">
+            <div class="h-72 lg:h-[40rem]">
                 @include('staff.customers._sidebar', ['activeId' => $customer->id])
             </div>
 
             <div class="space-y-6">
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
                         <div class="text-xs text-gray-500">Vehicles</div>
                         <div class="text-2xl font-bold">{{ $customer->vehicles->count() }}</div>
@@ -61,7 +61,7 @@
 
                     @forelse ($customer->vehicles as $vehicle)
                         <div class="border-t border-gray-100 first:border-t-0">
-                            <div class="px-4 py-3 bg-gray-50/60 flex items-center justify-between">
+                            <div class="px-4 py-3 bg-gray-50/60 flex flex-wrap items-center justify-between gap-2">
                                 <div>
                                     <a href="{{ route('staff.vehicles.show', $vehicle) }}" class="font-medium text-red-600 hover:underline">{{ $vehicle->registration_number }}</a>
                                     <span class="text-xs text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }}) · {{ $vehicle->branch->name ?? '—' }}</span>
@@ -109,7 +109,7 @@
                     <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Complete History (All Vehicles)</div>
                     <ul class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
                         @forelse ($timeline as $event)
-                            <li class="px-4 py-2 flex items-start gap-3 text-sm">
+                            <li class="px-4 py-2 flex flex-wrap items-start gap-x-3 gap-y-1 text-sm">
                                 <span class="text-xs font-semibold text-gray-400 w-20 shrink-0">{{ $event['vehicle'] }}</span>
                                 <div class="flex-1">
                                     @if ($event['url'])

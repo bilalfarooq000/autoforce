@@ -63,7 +63,7 @@
             @endif
         </div>
 
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between gap-4">
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
             <div>
                 <div class="text-sm font-semibold text-gray-800">Secure Customer Link</div>
                 <div class="text-xs text-gray-500 break-all">{{ $inspection->portalUrl() }}</div>
@@ -103,6 +103,7 @@
 
             <form method="POST" action="{{ route('staff.inspections.items.batch-update', $inspection) }}">
                 @csrf
+                <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 text-xs text-gray-500 uppercase">
                         <tr>
@@ -157,6 +158,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                </div>
 
                 @if ($canEdit)
                     <div class="px-4 py-3 border-t bg-gray-50 flex items-center justify-between">
@@ -176,7 +178,7 @@
             <ul class="divide-y">
                 @forelse ($adHocItems as $item)
                     <li class="px-4 py-4">
-                        <div class="flex justify-between items-start">
+                        <div class="flex flex-wrap justify-between items-start gap-2">
                             <div>
                                 <div class="font-medium">{{ $item->title }}</div>
                                 <p class="text-sm text-gray-600 mt-1">{{ $item->technician_comment }}</p>
@@ -257,7 +259,7 @@
         @endif
 
         @if ($inspection->invoice)
-            <div class="bg-white rounded-lg shadow p-4 flex justify-between items-center">
+            <div class="bg-white rounded-lg shadow p-4 flex flex-wrap justify-between items-center gap-2">
                 <div>
                     <div class="font-semibold">Invoice {{ $inspection->invoice->invoice_number }}</div>
                     <div class="text-sm text-gray-500">PKR {{ number_format($inspection->invoice->total) }}</div>
@@ -309,7 +311,7 @@
             <div class="px-4 py-3 border-b font-semibold text-gray-700">Communication Log</div>
             <ul class="divide-y text-sm">
                 @forelse ($inspection->notifications as $n)
-                    <li class="px-4 py-2 flex justify-between">
+                    <li class="px-4 py-2 flex flex-wrap justify-between gap-1">
                         <span>{{ str($n->type)->headline() }} <span class="text-xs text-gray-400">({{ $n->channel }})</span></span>
                         <span class="text-xs text-gray-400">{{ $n->created_at->diffForHumans() }} · {{ $n->status }}</span>
                     </li>

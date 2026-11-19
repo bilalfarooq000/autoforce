@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-4">
-        <form method="GET" class="flex gap-2">
+        <form method="GET" class="flex flex-wrap gap-2">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search invoice #, registration or customer"
                    class="w-full rounded-lg border-gray-300 shadow-sm text-sm" />
             <select name="status" class="rounded-lg border-gray-300 shadow-sm text-sm" onchange="this.form.submit()">
@@ -24,6 +24,7 @@
         </form>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -62,6 +63,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
         {{ $invoices->links() }}
     </div>

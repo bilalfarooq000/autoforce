@@ -30,7 +30,7 @@
                                 {{ $branch->is_active ? 'Active' : 'Inactive' }}
                             </span>
                         </div>
-                        <div class="grid grid-cols-4 gap-2 mt-4 text-center">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 text-center">
                             <div class="bg-gray-50 rounded-lg p-2">
                                 <div class="text-lg font-bold text-gray-900">{{ $branch->staff_count }}</div>
                                 <div class="text-xs text-gray-500">Staff</div>
@@ -48,7 +48,7 @@
                                 <div class="text-xs text-gray-500">Awaiting Approval</div>
                             </div>
                         </div>
-                        <div class="flex justify-between mt-3 text-sm">
+                        <div class="flex flex-wrap justify-between gap-2 mt-3 text-sm">
                             <span class="text-red-600 font-medium">Outstanding: PKR {{ number_format($branch->outstanding_amount) }}</span>
                             <span class="text-green-600 font-medium">Collected: PKR {{ number_format($branch->revenue_collected) }}</span>
                         </div>

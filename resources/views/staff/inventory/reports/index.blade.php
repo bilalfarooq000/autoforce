@@ -8,7 +8,7 @@
     @endphp
 
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-4">
-        <div class="flex gap-2">
+        <div class="flex gap-2 overflow-x-auto whitespace-nowrap pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
             <a href="{{ route('staff.inventory.items.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">Stock</a>
             <a href="{{ route('staff.inventory.movements.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">Movements</a>
             <a href="{{ route('staff.inventory.reports.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-900 text-white">Reports</a>
@@ -32,7 +32,7 @@
             </form>
         @endif
 
-        <div class="flex gap-2 border-b border-gray-200">
+        <div class="flex gap-2 border-b border-gray-200 overflow-x-auto whitespace-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
             @foreach (['overview' => 'Overview', 'low_stock' => 'Low Stock', 'valuation' => 'Valuation', 'usage' => 'Usage'] as $key => $label)
                 <a href="{{ route('staff.inventory.reports.index', $qs(['tab' => $key, 'item_id' => null])) }}"
                    class="px-3 py-2 text-sm font-medium border-b-2 {{ $tab === $key ? 'border-red-600 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-800' }}">
@@ -44,6 +44,7 @@
         @if ($tab === 'overview')
             @if ($branchStats->count() > 1)
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                             <tr>
@@ -68,6 +69,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 </div>
             @else
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -81,6 +83,7 @@
 
         @if ($tab === 'low_stock')
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                         <tr>
@@ -103,6 +106,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         @endif
 
@@ -114,6 +118,7 @@
                             <span>{{ $category }}</span>
                             <span>{{ $data['total_qty'] }} units · PKR {{ number_format($data['total_value'], 2) }}</span>
                         </div>
+                        <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <tbody class="divide-y">
                                 @foreach ($data['items'] as $item)
@@ -125,6 +130,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 @empty
                     <p class="px-4 py-6 text-center text-gray-500">No active inventory items yet.</p>
@@ -162,10 +168,11 @@
 
             @if ($usageItemId && $usageDetail !== null)
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                    <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800 flex justify-between items-center">
+                    <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800 flex flex-wrap justify-between items-center gap-2">
                         <span>Issue History — {{ $usageDetail->first()->item->name ?? '' }}</span>
                         <a href="{{ route('staff.inventory.reports.index', $qs(['item_id' => null])) }}" class="text-xs text-red-600 hover:underline font-medium">← Back to all parts</a>
                     </div>
+                    <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                             <tr>
@@ -198,9 +205,11 @@
                             @endforelse
                         </tbody>
                     </table>
+                    </div>
                 </div>
             @else
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                             <tr>
@@ -225,6 +234,7 @@
                             @endforelse
                         </tbody>
                     </table>
+                    </div>
                 </div>
             @endif
         @endif

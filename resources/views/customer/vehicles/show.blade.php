@@ -50,7 +50,7 @@
             @endphp
             @forelse ($vehicle->inspections as $inspection)
                 <div x-data="{ open: {{ $loop->first ? 'true' : 'false' }} }" class="bg-white rounded-lg shadow">
-                    <button @click="open = ! open" class="w-full px-4 py-4 flex justify-between items-center text-left">
+                    <button @click="open = ! open" class="w-full px-4 py-4 flex flex-wrap justify-between items-center gap-2 text-left">
                         <div>
                             <div class="font-medium">{{ $inspection->reason }}</div>
                             <div class="text-xs text-gray-500">{{ $inspection->created_at->format('d M Y') }} · {{ number_format($inspection->mileage_at_visit) }} km · {{ $inspection->technician->name ?? 'Technician unassigned' }}</div>
@@ -181,7 +181,7 @@
                         @endif
 
                         @if ($inspection->invoice)
-                            <div class="flex justify-between items-center bg-gray-50 rounded-md p-3 text-sm">
+                            <div class="flex flex-wrap justify-between items-center gap-2 bg-gray-50 rounded-md p-3 text-sm">
                                 <div>
                                     <div class="font-medium">Invoice {{ $inspection->invoice->invoice_number }}</div>
                                     <div class="text-xs text-gray-500">PKR {{ number_format($inspection->invoice->total) }} · {{ str($inspection->invoice->status)->headline() }}</div>
@@ -203,7 +203,7 @@
             <div class="divide-y">
                 @forelse ($vehicle->invoices as $invoice)
                     <div class="px-4 py-4">
-                        <div class="flex justify-between items-start">
+                        <div class="flex flex-wrap justify-between items-start gap-2">
                             <div>
                                 <div class="font-medium">{{ $invoice->invoice_number }}</div>
                                 <div class="text-xs text-gray-500">Issued {{ $invoice->issued_at->format('d M Y') }}</div>
@@ -220,6 +220,7 @@
                         </div>
 
                         <!-- Parts replaced / work undertaken -->
+                        <div class="overflow-x-auto">
                         <table class="w-full text-xs mt-3 border rounded-md">
                             <thead class="bg-gray-50 text-gray-500">
                                 <tr><th class="px-2 py-1 text-left">Description</th><th class="px-2 py-1 text-left">Type</th><th class="px-2 py-1 text-right">Amount</th><th class="px-2 py-1 text-right">Warranty</th></tr>
@@ -246,13 +247,14 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        </div>
 
                         <!-- Payment receipts -->
                         @if ($invoice->payments->count())
                             <div class="mt-2 text-xs text-gray-600">
                                 <div class="font-semibold text-gray-500 uppercase mb-1">Payment Receipts</div>
                                 @foreach ($invoice->payments as $payment)
-                                    <div class="flex justify-between py-0.5">
+                                    <div class="flex flex-wrap justify-between gap-1 py-0.5">
                                         <span>{{ $payment->paid_at->format('d M Y, h:i A') }} · {{ str($payment->method)->headline() }} {{ $payment->reference ? "(#{$payment->reference})" : '' }}</span>
                                         <span class="font-medium">PKR {{ number_format($payment->amount) }}</span>
                                     </div>

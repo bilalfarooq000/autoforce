@@ -16,9 +16,9 @@
                 <div class="text-xs font-semibold text-gray-500 uppercase mb-2">Public Booking Links</div>
                 <div class="space-y-1">
                     @foreach ($branches as $branch)
-                        <div class="flex items-center gap-2 text-sm">
+                        <div class="flex items-center gap-2 text-sm min-w-0">
                             <span class="text-gray-600 w-28 shrink-0">{{ $branch->name }}:</span>
-                            <code class="text-xs bg-gray-50 px-2 py-1 rounded text-gray-700 truncate">{{ route('portal.book.show', $branch) }}</code>
+                            <code class="text-xs bg-gray-50 px-2 py-1 rounded text-gray-700 truncate min-w-0">{{ route('portal.book.show', $branch) }}</code>
                         </div>
                     @endforeach
                 </div>
@@ -26,7 +26,7 @@
             </div>
         @endif
 
-        <div class="flex gap-2">
+        <div class="flex gap-2 overflow-x-auto whitespace-nowrap pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
             <a href="{{ route('staff.bookings.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ ! request('status') ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-600' }}">Upcoming</a>
             @foreach (\App\Models\Booking::STATUSES as $value => $label)
                 <a href="{{ route('staff.bookings.index', ['status' => $value]) }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request('status') === $value ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-600' }}">{{ $label }}</a>
@@ -34,6 +34,7 @@
         </div>
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -88,6 +89,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
         {{ $bookings->links() }}
     </div>

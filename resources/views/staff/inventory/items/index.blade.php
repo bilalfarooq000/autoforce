@@ -51,6 +51,7 @@
         </form>
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -101,6 +102,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
         {{ $items->links() }}
     </div>

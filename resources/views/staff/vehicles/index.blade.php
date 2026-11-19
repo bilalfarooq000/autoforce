@@ -9,13 +9,14 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-4">
-        <form method="GET" class="flex gap-2">
+        <form method="GET" class="flex flex-wrap gap-2">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search registration no., make, model or customer"
                    class="w-full rounded-md border-gray-300 shadow-sm text-sm" />
             <button class="px-4 py-2 bg-gray-800 text-white rounded-md text-sm">Search</button>
         </form>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr>
@@ -53,6 +54,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
 
         {{ $vehicles->links() }}

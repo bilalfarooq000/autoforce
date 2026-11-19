@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Staff Accounts</h2>
             <a href="{{ route('admin.staff.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700">
                 + Add Staff
@@ -19,6 +19,7 @@
         </form>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Role</th><th class="px-4 py-3">Branch</th><th class="px-4 py-3">Status</th><th></th></tr>
@@ -47,6 +48,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
         {{ $staff->links() }}
     </div>

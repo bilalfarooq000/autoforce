@@ -5,6 +5,7 @@
 
     <div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
                     <tr><th class="px-4 py-3">When</th><th class="px-4 py-3">Who</th><th class="px-4 py-3">Action</th><th class="px-4 py-3">On</th></tr>
@@ -29,6 +30,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
         {{ $activities->links() }}
     </div>
