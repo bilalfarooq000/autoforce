@@ -124,19 +124,19 @@
 
             <div class="relative z-20 min-h-screen flex flex-col">
                 <!-- Top brand strip -->
-                <div class="px-6 sm:px-10 pt-8">
-                    <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-10 w-auto drop-shadow-lg">
+                <div class="px-6 sm:px-10 pt-5">
+                    <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-9 w-auto drop-shadow-lg">
                 </div>
 
-                <div class="flex-1 flex items-end">
-                    <div class="w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-6 sm:px-10 lg:px-16 pb-10 lg:pb-14 mb-[110px] lg:mb-[120px]">
+                <div class="flex-1 flex items-end min-h-0">
+                    <div class="w-full flex flex-col lg:flex-row items-center justify-between gap-8 px-6 sm:px-10 lg:px-16 pb-6 lg:pb-8 mb-[116px] lg:mb-[122px]">
                         <!-- Copy block -->
                         <div class="w-full lg:w-[44%] text-center lg:text-left order-2 lg:order-1">
-                            <span class="inline-block text-red-500 text-xs font-bold tracking-[0.3em] uppercase mb-2">Dealer Management System</span>
-                            <h1 class="text-5xl sm:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
-                            <div class="h-1 w-20 bg-red-600 mx-auto lg:mx-0 mt-4 mb-4 rounded-full"></div>
-                            <p class="text-base text-slate-200 max-w-sm mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
-                            <ul class="mt-6 space-y-2 text-left max-w-sm mx-auto lg:mx-0">
+                            <span class="inline-block text-red-500 text-xs font-bold tracking-[0.3em] uppercase mb-1">Dealer Management System</span>
+                            <h1 class="text-4xl sm:text-5xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
+                            <div class="h-1 w-16 bg-red-600 mx-auto lg:mx-0 mt-3 mb-3 rounded-full"></div>
+                            <p class="text-sm sm:text-base text-slate-200 max-w-sm mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
+                            <ul class="mt-4 space-y-1.5 text-left max-w-sm mx-auto lg:mx-0">
                                 <li class="flex items-start gap-2 text-sm text-slate-200">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
                                     <span>Multi-branch workshop, invoicing and inventory in one place.</span>
