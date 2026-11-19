@@ -68,9 +68,9 @@
                                 </div>
                                 <div class="flex items-center gap-3 shrink-0">
                                     @if (auth()->user()->hasAnyRole(['admin', 'manager', 'service_advisor']))
-                                        <a href="{{ route('staff.invoices.quick-create', $vehicle) }}" class="text-xs text-gray-600 hover:underline font-medium">+ Quick Invoice</a>
+                                        <a href="{{ route('staff.invoices.quick-create', $vehicle) }}" class="animate-pulse text-xs text-white font-semibold bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg">+ Quick Invoice</a>
                                     @endif
-                                    <a href="{{ route('staff.inspections.create', $vehicle) }}" class="text-xs text-gray-600 hover:underline font-medium">+ New Inspection</a>
+                                    <a href="{{ route('staff.inspections.create', $vehicle) }}" class="animate-pulse text-xs text-white font-semibold bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg">+ New Inspection</a>
                                 </div>
                             </div>
 
