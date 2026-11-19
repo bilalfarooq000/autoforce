@@ -128,20 +128,20 @@
                     <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-9 w-auto drop-shadow-lg">
                 </div>
 
-                <div class="flex-1 flex items-end min-h-0">
-                    <div class="w-full flex flex-col lg:flex-row items-center justify-between gap-8 px-6 sm:px-10 lg:px-16 pb-6 lg:pb-8 mb-[116px] lg:mb-[122px]">
+                <div class="flex-1 flex items-center min-h-0 pb-[110px] lg:pb-[118px]">
+                    <div class="w-full flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 px-6 sm:px-10 lg:px-16">
                         <!-- Copy block -->
-                        <div class="w-full lg:w-[44%] text-center lg:text-left order-2 lg:order-1">
-                            <span class="inline-block text-red-500 text-xs font-bold tracking-[0.3em] uppercase mb-1">Dealer Management System</span>
-                            <h1 class="text-4xl sm:text-5xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
-                            <div class="h-1 w-16 bg-red-600 mx-auto lg:mx-0 mt-3 mb-3 rounded-full"></div>
-                            <p class="text-sm sm:text-base text-slate-200 max-w-sm mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
-                            <ul class="mt-4 space-y-1.5 text-left max-w-sm mx-auto lg:mx-0">
-                                <li class="flex items-start gap-2 text-sm text-slate-200">
+                        <div class="w-full max-w-md text-center lg:text-left order-2 lg:order-1">
+                            <span class="inline-block text-red-500 text-sm font-bold tracking-[0.3em] uppercase mb-2">Dealer Management System</span>
+                            <h1 class="text-5xl sm:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
+                            <div class="h-1 w-20 bg-red-600 mx-auto lg:mx-0 mt-4 mb-4 rounded-full"></div>
+                            <p class="text-base sm:text-lg text-slate-200 max-w-md mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
+                            <ul class="mt-5 space-y-2 text-left max-w-md mx-auto lg:mx-0">
+                                <li class="flex items-start gap-2 text-sm sm:text-base text-slate-200">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
                                     <span>Multi-branch workshop, invoicing and inventory in one place.</span>
                                 </li>
-                                <li class="flex items-start gap-2 text-sm text-slate-200">
+                                <li class="flex items-start gap-2 text-sm sm:text-base text-slate-200">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
                                     <span>Built for role-based access — admin, manager, advisor, technician.</span>
                                 </li>
@@ -149,7 +149,7 @@
                         </div>
 
                         <!-- Login card -->
-                        <div class="card-glow animate-float-in w-full max-w-sm bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl border-t-4 border-red-600 px-8 py-8 order-1 lg:order-2">
+                        <div class="card-glow animate-float-in w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl border-t-4 border-red-600 px-10 py-10 order-1 lg:order-2">
                             {{ $slot }}
                         </div>
                     </div>
