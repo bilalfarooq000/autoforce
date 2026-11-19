@@ -128,12 +128,14 @@
                     <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-10 w-auto drop-shadow-lg">
                 </div>
 
-                <div class="flex-1 flex items-center">
-                    <div class="w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-6 sm:px-10 lg:px-16 pb-[130px] lg:pb-[140px]">
+                <div class="flex-1 flex items-end">
+                    <div class="w-full flex flex-col lg:flex-row items-center justify-between gap-10 px-6 sm:px-10 lg:px-16 pb-10 lg:pb-14 mb-[110px] lg:mb-[120px]">
                         <!-- Copy block -->
-                        <div class="w-full lg:w-[42%] text-center lg:text-left order-2 lg:order-1">
-                            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">AutoForce <span class="text-red-500">DMS</span></h1>
-                            <p class="text-base text-slate-200 mt-3 max-w-sm mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
+                        <div class="w-full lg:w-[44%] text-center lg:text-left order-2 lg:order-1">
+                            <span class="inline-block text-red-500 text-xs font-bold tracking-[0.3em] uppercase mb-2">Dealer Management System</span>
+                            <h1 class="text-5xl sm:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
+                            <div class="h-1 w-20 bg-red-600 mx-auto lg:mx-0 mt-4 mb-4 rounded-full"></div>
+                            <p class="text-base text-slate-200 max-w-sm mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
                             <ul class="mt-6 space-y-2 text-left max-w-sm mx-auto lg:mx-0">
                                 <li class="flex items-start gap-2 text-sm text-slate-200">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
