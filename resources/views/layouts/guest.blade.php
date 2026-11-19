@@ -28,21 +28,29 @@
             .road {
                 position: absolute;
                 left: 0; right: 0; bottom: 0;
-                height: 110px;
+                height: 56px;
                 z-index: 10;
                 background: linear-gradient(180deg, #232326 0%, #1b1b1d 40%, #0e0e10 100%);
-                border-top: 3px solid rgba(255,255,255,.28);
-                box-shadow: 0 -16px 40px rgba(0,0,0,.65);
+                border-top: 2px solid rgba(255,255,255,.28);
+                box-shadow: 0 -12px 28px rgba(0,0,0,.65);
             }
             .road::after {
                 content: "";
                 position: absolute;
                 left: 0; right: 0; top: 50%;
-                height: 6px;
+                height: 4px;
                 transform: translateY(-50%);
-                background-image: repeating-linear-gradient(90deg, #fbbf24 0 44px, transparent 44px 80px);
-                animation: roadScroll 1.3s linear infinite;
+                background-image: repeating-linear-gradient(90deg, #fbbf24 0 28px, transparent 28px 52px);
+                animation: roadScroll 1.1s linear infinite;
                 box-shadow: 0 0 10px rgba(251,191,36,.55);
+            }
+            @media (min-width: 640px) {
+                .road { height: 78px; border-top-width: 3px; }
+                .road::after { height: 5px; background-image: repeating-linear-gradient(90deg, #fbbf24 0 36px, transparent 36px 64px); }
+            }
+            @media (min-width: 1024px) {
+                .road { height: 110px; }
+                .road::after { height: 6px; background-image: repeating-linear-gradient(90deg, #fbbf24 0 44px, transparent 44px 80px); }
             }
             @keyframes roadScroll {
                 0%   { background-position-x: 0; }
@@ -57,13 +65,20 @@
             }
             .car {
                 position: absolute;
-                bottom: 24px;
+                bottom: 10px;
                 left: 0;
                 z-index: 15;
+                height: auto;
                 animation-name: driveIn;
                 animation-timing-function: linear;
                 animation-iteration-count: infinite;
-                filter: drop-shadow(0 8px 10px rgba(0,0,0,.65));
+                filter: drop-shadow(0 6px 8px rgba(0,0,0,.65));
+            }
+            @media (min-width: 640px) {
+                .car { bottom: 16px; }
+            }
+            @media (min-width: 1024px) {
+                .car { bottom: 24px; }
             }
 
             @keyframes floatCard {
@@ -80,10 +95,15 @@
             .card-glow {
                 animation: glowPulse 3.5s ease-in-out infinite;
             }
+
+            .vh-screen {
+                min-height: 100vh;
+                min-height: 100svh;
+            }
         </style>
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="relative min-h-screen w-full overflow-hidden bg-black">
+        <div class="vh-screen relative w-full overflow-hidden bg-black">
             <!-- Full-screen branding photo with slow cinematic zoom -->
             <img src="{{ asset('images/login-bg-garage.jpg') }}" alt="" class="bg-kenburns absolute inset-0 w-full h-full object-cover">
 
@@ -98,7 +118,7 @@
             <div class="road"></div>
 
             <!-- Luxury coupe driving across, toward the garage -->
-            <svg class="car" width="136" height="42" viewBox="0 0 128 40" style="animation-duration: 8.5s; animation-delay: 0s;">
+            <svg class="car w-20 sm:w-28 lg:w-[136px]" viewBox="0 0 128 40" style="animation-duration: 8.5s; animation-delay: 0s;">
                 <ellipse cx="64" cy="37" rx="58" ry="3" fill="black" opacity=".4"/>
                 <path d="M6 26 C6 20 12 19 20 18 L34 8 C38 4 46 2 56 2 L82 2 C90 2 96 5 100 10 L110 18 C118 19 122 21 122 26 L122 28 C122 31 119 32 115 32 L13 32 C9 32 6 31 6 28 Z" fill="#b91c1c"/>
                 <path d="M37 9 L47 3 L78 3 L92 9 L95 17 L34 17 Z" fill="#0b0f19" opacity=".92"/>
@@ -110,7 +130,7 @@
                 <rect x="112" y="18" width="10" height="4" rx="2" fill="#fef9c3"/>
                 <rect x="4" y="19" width="8" height="3" rx="1.5" fill="#dc2626"/>
             </svg>
-            <svg class="car" width="106" height="34" viewBox="0 0 100 32" style="animation-duration: 10.5s; animation-delay: 4.3s;">
+            <svg class="car w-16 sm:w-24 lg:w-[106px]" viewBox="0 0 100 32" style="animation-duration: 10.5s; animation-delay: 4.3s;">
                 <ellipse cx="50" cy="29" rx="45" ry="2.6" fill="black" opacity=".4"/>
                 <path d="M5 21 C5 16 10 15 17 14 L28 6 C31 3 38 1 46 1 L64 1 C70 1 75 4 78 8 L86 14 C92 15 95 17 95 21 L95 23 C95 25 93 26 90 26 L10 26 C7 26 5 25 5 23 Z" fill="#111827"/>
                 <path d="M30 7 L38 2 L62 2 L73 7 L75 13 L27 13 Z" fill="#1f2937" opacity=".9"/>
@@ -122,21 +142,21 @@
                 <rect x="3" y="15" width="6" height="2.4" rx="1.2" fill="#dc2626"/>
             </svg>
 
-            <div class="relative z-20 min-h-screen flex flex-col">
+            <div class="vh-screen relative z-20 flex flex-col">
                 <!-- Top brand strip -->
-                <div class="px-6 sm:px-10 pt-5">
-                    <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-9 w-auto drop-shadow-lg">
+                <div class="px-4 sm:px-6 lg:px-10 pt-4 sm:pt-5">
+                    <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-7 sm:h-8 lg:h-9 w-auto drop-shadow-lg">
                 </div>
 
-                <div class="flex-1 flex items-center min-h-0 pb-[110px] lg:pb-[118px]">
-                    <div class="w-full flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 px-6 sm:px-10 lg:px-16">
+                <div class="flex-1 flex items-center min-h-0 overflow-y-auto pb-16 sm:pb-24 lg:pb-[118px]">
+                    <div class="w-full flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-10 lg:gap-16 px-4 sm:px-8 lg:px-16 py-4">
                         <!-- Copy block -->
-                        <div class="w-full max-w-md text-center lg:text-left order-2 lg:order-1">
-                            <span class="inline-block text-red-500 text-sm font-bold tracking-[0.3em] uppercase mb-2">Dealer Management System</span>
-                            <h1 class="text-5xl sm:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
-                            <div class="h-1 w-20 bg-red-600 mx-auto lg:mx-0 mt-4 mb-4 rounded-full"></div>
-                            <p class="text-base sm:text-lg text-slate-200 max-w-md mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
-                            <ul class="mt-5 space-y-2 text-left max-w-md mx-auto lg:mx-0">
+                        <div class="hidden sm:block w-full max-w-md text-center lg:text-left order-2 lg:order-1">
+                            <span class="inline-block text-red-500 text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase mb-1.5 sm:mb-2">Dealer Management System</span>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
+                            <div class="h-1 w-16 sm:w-20 bg-red-600 mx-auto lg:mx-0 mt-3 sm:mt-4 mb-3 sm:mb-4 rounded-full"></div>
+                            <p class="text-sm sm:text-base lg:text-lg text-slate-200 max-w-md mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
+                            <ul class="mt-4 sm:mt-5 space-y-1.5 sm:space-y-2 text-left max-w-md mx-auto lg:mx-0">
                                 <li class="flex items-start gap-2 text-sm sm:text-base text-slate-200">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
                                     <span>Multi-branch workshop, invoicing and inventory in one place.</span>
@@ -148,8 +168,14 @@
                             </ul>
                         </div>
 
+                        <!-- Compact heading shown only on phones, above the card -->
+                        <div class="sm:hidden text-center order-1">
+                            <span class="inline-block text-red-500 text-[10px] font-bold tracking-[0.2em] uppercase mb-1">Dealer Management System</span>
+                            <h1 class="text-3xl font-extrabold italic uppercase text-white tracking-tight leading-none" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span> DMS</h1>
+                        </div>
+
                         <!-- Login card -->
-                        <div class="card-glow animate-float-in w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl border-t-4 border-red-600 px-10 py-10 order-1 lg:order-2">
+                        <div class="card-glow animate-float-in w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl border-t-4 border-red-600 px-6 py-7 sm:px-8 sm:py-9 lg:px-10 lg:py-10 order-2 lg:order-2">
                             {{ $slot }}
                         </div>
                     </div>
