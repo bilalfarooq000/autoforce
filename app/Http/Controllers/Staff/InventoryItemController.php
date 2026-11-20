@@ -101,11 +101,22 @@ class InventoryItemController extends Controller
             ->with('status', 'Item added to inventory.');
     }
 
-    public function show(InventoryItem $stockItem)
+    public function show(Request $request, InventoryItem $stockItem)
     {
-        $stockItem->load('category', 'branch', 'movements.performedBy', 'movements.inspection.vehicle.customer');
+        $stockItem->load('category', 'branch');
 
-        return view('staff.inventory.items.show', ['item' => $stockItem]);
+        $movements = $stockItem->movements()
+            ->with('performedBy', 'inspection.vehicle.customer')
+            ->when($request->type, fn ($q, $t) => $q->where('type', $t))
+            ->when($request->search, fn ($q, $s) => $q->where(fn ($qq) => $qq->where('reference', 'like', "%{$s}%")
+                ->orWhereHas('inspection', fn ($i) => $i->whereHas('vehicle', fn ($v) => $v->where('registration_number', 'like', "%{$s}%")
+                    ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$s}%"))))))
+            ->when($request->from, fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
+            ->when($request->to, fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
+            ->paginate(25)
+            ->withQueryString();
+
+        return view('staff.inventory.items.show', ['item' => $stockItem, 'movements' => $movements]);
     }
 
     public function edit(InventoryItem $stockItem)

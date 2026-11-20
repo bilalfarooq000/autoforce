@@ -29,8 +29,10 @@ class InventoryMovementController extends Controller
             ->when($request->item_id, fn ($q, $id) => $q->where('item_id', $id))
             ->when($request->from, fn ($q, $d) => $q->whereDate('created_at', '>=', $d))
             ->when($request->to, fn ($q, $d) => $q->whereDate('created_at', '<=', $d))
-            ->when($request->search, fn ($q, $s) => $q->whereHas('inspection', fn ($i) => $i->whereHas('vehicle', fn ($v) => $v->where('registration_number', 'like', "%{$s}%")
-                ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$s}%")))))
+            ->when($request->search, fn ($q, $s) => $q->where(fn ($qq) => $qq->where('reference', 'like', "%{$s}%")
+                ->orWhereHas('item', fn ($it) => $it->where('name', 'like', "%{$s}%"))
+                ->orWhereHas('inspection', fn ($i) => $i->whereHas('vehicle', fn ($v) => $v->where('registration_number', 'like', "%{$s}%")
+                    ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$s}%"))))))
             ->latest()
             ->paginate(25)
             ->withQueryString();

@@ -51,6 +51,34 @@
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Movement History</div>
+            <form method="GET" class="px-4 py-3 border-b border-gray-200 bg-gray-50 flex flex-wrap gap-3 items-end">
+                <div class="flex-1 min-w-[160px]">
+                    <label class="text-xs text-gray-500">Search</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Reference, vehicle or customer"
+                           class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">Type</label>
+                    <select name="type" class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
+                        <option value="">All Types</option>
+                        @foreach (\App\Models\InventoryMovement::TYPES as $value => $label)
+                            <option value="{{ $value }}" @selected(request('type') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">From</label>
+                    <input type="date" name="from" value="{{ request('from') }}" class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">To</label>
+                    <input type="date" name="to" value="{{ request('to') }}" class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
+                </div>
+                <button class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm">Filter</button>
+                @if (request()->hasAny(['search', 'type', 'from', 'to']))
+                    <a href="{{ route('staff.inventory.items.show', $item) }}" class="text-xs text-red-600 hover:underline pb-2">Clear</a>
+                @endif
+            </form>
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
@@ -64,7 +92,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y">
-                    @forelse ($item->movements as $m)
+                    @forelse ($movements as $m)
                         <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3 text-gray-500">{{ $m->created_at->format('d M Y, h:i A') }}</td>
                             <td class="px-4 py-3">{{ $m->typeLabel() }}</td>
@@ -85,6 +113,9 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
+            <div class="px-4 py-3 border-t border-gray-100">
+                {{ $movements->links() }}
             </div>
         </div>
     </div>

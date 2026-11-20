@@ -49,11 +49,14 @@
                 <input type="date" name="to" value="{{ request('to') }}" class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
             </div>
             <div class="flex-1 min-w-[160px]">
-                <label class="text-xs text-gray-500">Vehicle / Customer</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Reg. number or customer name"
+                <label class="text-xs text-gray-500">Search</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Item name, reference, registration or customer"
                        class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
             </div>
             <button class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm">Filter</button>
+            @if (request()->hasAny(['branch_id', 'item_id', 'type', 'from', 'to', 'search']))
+                <a href="{{ route('staff.inventory.movements.index') }}" class="text-xs text-red-600 hover:underline pb-2">Clear</a>
+            @endif
         </form>
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
