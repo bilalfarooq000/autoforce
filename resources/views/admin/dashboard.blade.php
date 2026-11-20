@@ -5,12 +5,15 @@
 
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <x-stat-card label="Branches" :value="$companyStats['total_branches']" icon="building" accent="slate" />
-            <x-stat-card label="Total Vehicles" :value="$companyStats['total_vehicles']" icon="car" accent="blue" />
-            <x-stat-card label="Staff" :value="$companyStats['total_staff']" icon="users" accent="slate" />
-            <x-stat-card label="Jobs In Progress" :value="$companyStats['jobs_in_progress']" icon="wrench" accent="amber" />
-            <x-stat-card label="Outstanding (PKR)" :value="number_format($companyStats['total_outstanding'])" icon="receipt" accent="red" />
-            <x-stat-card label="Revenue Collected (PKR)" :value="number_format($companyStats['total_revenue'])" icon="cash" accent="green" />
+            <x-stat-card label="Branches" :value="$companyStats['total_branches']" icon="building" accent="slate" href="#branches" />
+            <x-stat-card label="Total Vehicles" :value="$companyStats['total_vehicles']" icon="car" accent="blue" :href="route('staff.vehicles.index')" />
+            <x-stat-card label="Staff" :value="$companyStats['total_staff']" icon="users" accent="slate" :href="route('admin.staff.index')" />
+            <x-stat-card label="Customers" :value="$companyStats['total_customers']" icon="users" accent="blue" :href="route('staff.customers.index')" />
+            <x-stat-card label="Jobs In Progress" :value="$companyStats['jobs_in_progress']" icon="wrench" accent="amber" href="#charts" />
+            <x-stat-card label="Outstanding (PKR)" :value="number_format($companyStats['total_outstanding'])" icon="receipt" accent="red" :href="route('staff.finance.index')" />
+            <x-stat-card label="Revenue Collected (PKR)" :value="number_format($companyStats['total_revenue'])" icon="cash" accent="green" :href="route('staff.finance.index')" />
+            <x-stat-card label="Inventory Value (PKR)" :value="number_format($companyStats['inventory_value'])" icon="clipboard" accent="slate" :href="route('staff.inventory.items.index')" />
+            <x-stat-card label="Low Stock Items" :value="$companyStats['low_stock_items']" icon="wrench" accent="red" :href="route('staff.inventory.reports.index', ['tab' => 'low_stock'])" />
         </div>
 
         @if ($branches->isNotEmpty())
@@ -23,7 +26,7 @@
                 $chartActiveJobs = $branches->pluck('active_jobs');
                 $chartAwaiting = $branches->pluck('awaiting_approval');
             @endphp
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div id="charts" class="grid grid-cols-1 lg:grid-cols-2 gap-6 scroll-mt-4">
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
                     <h3 class="font-semibold text-gray-800 mb-1">Revenue by Branch</h3>
                     <p class="text-xs text-gray-500 mb-2">Outstanding vs. collected, per branch (PKR)</p>
@@ -59,14 +62,14 @@
             </div>
         @endif
 
-        <div>
+        <div id="branches" class="scroll-mt-4">
             <div class="flex justify-between items-center mb-3">
                 <h3 class="font-semibold text-gray-800">Branches</h3>
                 <a href="{{ route('admin.branches.create') }}" class="text-sm text-red-600 hover:underline font-medium">+ Register Branch</a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @foreach ($branches as $branch)
-                    <a href="{{ route('staff.dashboard', ['branch' => $branch->id]) }}" class="block bg-white rounded-xl border border-gray-200 border-t-4 {{ $branch->is_active ? 'border-t-red-600' : 'border-t-gray-300' }} shadow-sm p-5 hover:shadow-md transition">
+                    <a href="{{ route('staff.dashboard', ['branch' => $branch->id]) }}" class="group block bg-white rounded-xl border border-gray-200 border-t-4 {{ $branch->is_active ? 'border-t-red-600' : 'border-t-gray-300' }} shadow-sm p-5 hover:shadow-lg hover:border-red-200 hover:-translate-y-0.5 transition-all cursor-pointer">
                         <div class="flex justify-between items-start">
                             <div>
                                 <div class="font-semibold text-lg text-gray-900">{{ $branch->name }}</div>
@@ -97,6 +100,10 @@
                         <div class="flex flex-wrap justify-between gap-2 mt-3 text-sm">
                             <span class="text-red-600 font-medium">Outstanding: PKR {{ number_format($branch->outstanding_amount) }}</span>
                             <span class="text-green-600 font-medium">Collected: PKR {{ number_format($branch->revenue_collected) }}</span>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-gray-100 text-sm font-medium text-red-600 flex items-center justify-between">
+                            <span>View full workshop dashboard</span>
+                            <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
                         </div>
                     </a>
                 @endforeach

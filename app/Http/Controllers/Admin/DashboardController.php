@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Inspection;
+use App\Models\InventoryItem;
 use App\Models\Invoice;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -26,6 +27,8 @@ class DashboardController extends Controller
             return $branch;
         });
 
+        $activeItems = InventoryItem::where('is_active', true)->get();
+
         $companyStats = [
             'total_branches' => $branches->count(),
             'total_vehicles' => Vehicle::count(),
@@ -33,6 +36,9 @@ class DashboardController extends Controller
             'jobs_in_progress' => Inspection::where('status', '!=', 'completed')->count(),
             'total_outstanding' => $branches->sum('outstanding_amount'),
             'total_revenue' => $branches->sum('revenue_collected'),
+            'total_customers' => User::role('customer')->count(),
+            'inventory_value' => $activeItems->sum(fn ($i) => $i->quantity_on_hand * $i->cost_price),
+            'low_stock_items' => $activeItems->filter(fn ($i) => $i->quantity_on_hand <= $i->reorder_level)->count(),
         ];
 
         return view('admin.dashboard', compact('branches', 'companyStats'));
