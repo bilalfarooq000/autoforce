@@ -13,6 +13,37 @@
     <div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-4">
         <p class="text-sm text-gray-500">Every purchase recorded here automatically receives the stock into Inventory — no separate "Receive Stock" step needed.</p>
 
+        <form method="GET" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-wrap gap-3 items-end">
+            <div class="flex-1 min-w-[180px]">
+                <label class="text-xs text-gray-500">Search</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Purchase #, invoice ref, supplier"
+                       class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
+            </div>
+            @if ($suppliers->isNotEmpty())
+                <div>
+                    <label class="text-xs text-gray-500">Supplier</label>
+                    <select name="supplier_id" class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
+                        <option value="">All suppliers</option>
+                        @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}" @selected(request('supplier_id') == $supplier->id)>{{ $supplier->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+            <div>
+                <label class="text-xs text-gray-500">From</label>
+                <input type="date" name="from" value="{{ request('from') }}" class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
+            </div>
+            <div>
+                <label class="text-xs text-gray-500">To</label>
+                <input type="date" name="to" value="{{ request('to') }}" class="rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500" />
+            </div>
+            <button class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm">Filter</button>
+            @if (request()->hasAny(['search', 'supplier_id', 'from', 'to']))
+                <a href="{{ route('staff.purchases.index') }}" class="text-xs text-red-600 hover:underline pb-2">Clear</a>
+            @endif
+        </form>
+
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">

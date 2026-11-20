@@ -13,15 +13,24 @@ class FinanceController extends Controller
         $user = $request->user();
         $branchId = $user->hasRole('admin') ? $request->integer('branch') ?: null : $user->branch_id;
 
+        $filters = function ($q) use ($request, $branchId) {
+            $q->when($branchId, fn ($q) => $q->whereHas('vehicle', fn ($v) => $v->where('branch_id', $branchId)))
+                ->when($request->status, fn ($q, $s) => $q->where('status', $s))
+                ->when($request->search, fn ($q, $s) => $q->where(fn ($qq) => $qq->where('invoice_number', 'like', "%{$s}%")
+                    ->orWhereHas('vehicle', fn ($v) => $v->where('registration_number', 'like', "%{$s}%"))
+                    ->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$s}%"))))
+                ->when($request->from, fn ($q, $d) => $q->whereDate('issued_at', '>=', $d))
+                ->when($request->to, fn ($q, $d) => $q->whereDate('issued_at', '<=', $d));
+        };
+
         $invoices = Invoice::with('vehicle.branch', 'customer', 'payments')
-            ->when($branchId, fn ($q) => $q->whereHas('vehicle', fn ($v) => $v->where('branch_id', $branchId)))
-            ->when($request->status, fn ($q, $s) => $q->where('status', $s))
+            ->tap($filters)
             ->latest()
             ->paginate(20)
             ->withQueryString();
 
         $allForTotals = Invoice::with('payments')
-            ->when($branchId, fn ($q) => $q->whereHas('vehicle', fn ($v) => $v->where('branch_id', $branchId)))
+            ->tap($filters)
             ->get();
 
         $stats = [

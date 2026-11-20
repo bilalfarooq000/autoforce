@@ -13,8 +13,16 @@
     <div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-4">
         <form method="GET" class="flex flex-wrap gap-2">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search supplier name"
-                   class="w-full rounded-lg border-gray-300 shadow-sm text-sm focus:border-red-500 focus:ring-red-500" />
+                   class="w-full sm:w-auto sm:flex-1 rounded-lg border-gray-300 shadow-sm text-sm focus:border-red-500 focus:ring-red-500" />
+            <select name="status" class="rounded-lg border-gray-300 shadow-sm text-sm" onchange="this.form.submit()">
+                <option value="">All statuses</option>
+                <option value="active" @selected(request('status') === 'active')>Active</option>
+                <option value="inactive" @selected(request('status') === 'inactive')>Inactive</option>
+            </select>
             <button class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm">Search</button>
+            @if (request()->hasAny(['search', 'status']))
+                <a href="{{ route('staff.suppliers.index') }}" class="text-xs text-red-600 hover:underline self-center">Clear</a>
+            @endif
         </form>
 
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">

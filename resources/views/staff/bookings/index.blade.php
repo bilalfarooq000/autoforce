@@ -26,10 +26,20 @@
             </div>
         @endif
 
+        <form method="GET" class="flex flex-wrap gap-2">
+            <input type="hidden" name="status" value="{{ request('status') }}">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search customer, phone or registration"
+                   class="w-full sm:w-auto sm:flex-1 rounded-lg border-gray-300 shadow-sm text-sm focus:border-red-500 focus:ring-red-500" />
+            <button class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm">Search</button>
+            @if (request('search'))
+                <a href="{{ route('staff.bookings.index', ['status' => request('status')]) }}" class="text-xs text-red-600 hover:underline self-center">Clear</a>
+            @endif
+        </form>
+
         <div class="flex gap-2 overflow-x-auto whitespace-nowrap pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
-            <a href="{{ route('staff.bookings.index') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ ! request('status') ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-600' }}">Upcoming</a>
+            <a href="{{ route('staff.bookings.index', ['search' => request('search')]) }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ ! request('status') ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-600' }}">Upcoming</a>
             @foreach (\App\Models\Booking::STATUSES as $value => $label)
-                <a href="{{ route('staff.bookings.index', ['status' => $value]) }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request('status') === $value ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-600' }}">{{ $label }}</a>
+                <a href="{{ route('staff.bookings.index', ['status' => $value, 'search' => request('search')]) }}" class="px-3 py-1.5 rounded-lg text-sm font-medium {{ request('status') === $value ? 'bg-gray-900 text-white' : 'bg-white border border-gray-200 text-gray-600' }}">{{ $label }}</a>
             @endforeach
         </div>
 

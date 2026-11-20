@@ -26,6 +26,9 @@ class BookingController extends Controller
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->when($request->status, fn ($q, $s) => $q->where('status', $s))
             ->when(! $request->status, fn ($q) => $q->whereIn('status', ['pending', 'confirmed']))
+            ->when($request->search, fn ($q, $s) => $q->where(fn ($qq) => $qq->where('customer_name', 'like', "%{$s}%")
+                ->orWhere('customer_phone', 'like', "%{$s}%")
+                ->orWhere('vehicle_registration_number', 'like', "%{$s}%")))
             ->orderBy('requested_at')
             ->paginate(20)
             ->withQueryString();

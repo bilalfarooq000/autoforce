@@ -17,6 +17,7 @@ class SupplierController extends Controller
         $suppliers = Supplier::with('branch')
             ->when($branchId, fn ($q) => $q->where(fn ($qq) => $qq->where('branch_id', $branchId)->orWhereNull('branch_id')))
             ->when($request->search, fn ($q, $s) => $q->where('name', 'like', "%{$s}%"))
+            ->when($request->filled('status'), fn ($q) => $q->where('is_active', $request->status === 'active'))
             ->orderBy('name')
             ->paginate(20)
             ->withQueryString();

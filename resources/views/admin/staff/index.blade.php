@@ -9,13 +9,32 @@
     </x-slot>
 
     <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-4">
-        <form method="GET" class="flex gap-2">
+        <form method="GET" class="flex flex-wrap gap-2">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name or email"
+                   class="w-full sm:w-auto sm:flex-1 rounded-md border-gray-300 shadow-sm text-sm focus:border-red-500 focus:ring-red-500" />
             <select name="branch_id" class="rounded-md border-gray-300 shadow-sm text-sm" onchange="this.form.submit()">
                 <option value="">All branches</option>
                 @foreach ($branches as $branch)
                     <option value="{{ $branch->id }}" @selected(request('branch_id') == $branch->id)>{{ $branch->name }}</option>
                 @endforeach
             </select>
+            <select name="role" class="rounded-md border-gray-300 shadow-sm text-sm" onchange="this.form.submit()">
+                <option value="">All roles</option>
+                <option value="admin" @selected(request('role') === 'admin')>Admin</option>
+                <option value="manager" @selected(request('role') === 'manager')>Manager</option>
+                <option value="service_advisor" @selected(request('role') === 'service_advisor')>Service Advisor</option>
+                <option value="technician" @selected(request('role') === 'technician')>Technician</option>
+                <option value="inventory_manager" @selected(request('role') === 'inventory_manager')>Inventory Manager</option>
+            </select>
+            <select name="status" class="rounded-md border-gray-300 shadow-sm text-sm" onchange="this.form.submit()">
+                <option value="">All statuses</option>
+                <option value="active" @selected(request('status') === 'active')>Active</option>
+                <option value="inactive" @selected(request('status') === 'inactive')>Inactive</option>
+            </select>
+            <button class="px-4 py-2 bg-gray-900 text-white rounded-md text-sm">Search</button>
+            @if (request()->hasAny(['search', 'branch_id', 'role', 'status']))
+                <a href="{{ route('admin.staff.index') }}" class="text-xs text-red-600 hover:underline self-center">Clear</a>
+            @endif
         </form>
 
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

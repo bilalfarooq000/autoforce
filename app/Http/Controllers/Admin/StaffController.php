@@ -11,9 +11,13 @@ class StaffController extends Controller
 {
     public function index(Request $request)
     {
-        $staff = User::role(['admin', 'manager', 'service_advisor', 'technician'])
+        $staff = User::role(['admin', 'manager', 'service_advisor', 'technician', 'inventory_manager'])
             ->with('roles', 'branch')
             ->when($request->branch_id, fn ($q) => $q->where('branch_id', $request->branch_id))
+            ->when($request->role, fn ($q, $r) => $q->role($r))
+            ->when($request->search, fn ($q, $s) => $q->where(fn ($qq) => $qq->where('name', 'like', "%{$s}%")
+                ->orWhere('email', 'like', "%{$s}%")))
+            ->when($request->filled('status'), fn ($q) => $q->where('is_active', $request->status === 'active'))
             ->latest()->paginate(15)->withQueryString();
 
         $branches = Branch::all();

@@ -22,6 +22,11 @@ class PurchaseController extends Controller
         $purchases = Purchase::with('supplier', 'purchasedBy')
             ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
             ->when($request->supplier_id, fn ($q, $id) => $q->where('supplier_id', $id))
+            ->when($request->search, fn ($q, $s) => $q->where(fn ($qq) => $qq->where('purchase_number', 'like', "%{$s}%")
+                ->orWhere('supplier_invoice_reference', 'like', "%{$s}%")
+                ->orWhereHas('supplier', fn ($sup) => $sup->where('name', 'like', "%{$s}%"))))
+            ->when($request->from, fn ($q, $d) => $q->whereDate('purchased_at', '>=', $d))
+            ->when($request->to, fn ($q, $d) => $q->whereDate('purchased_at', '<=', $d))
             ->latest('purchased_at')
             ->paginate(20)
             ->withQueryString();
