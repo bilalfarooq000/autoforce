@@ -155,15 +155,15 @@
                             <span class="inline-block text-red-500 text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase mb-1.5 sm:mb-2">Garage Management System</span>
                             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>GMS</h1>
                             <div class="h-1 w-16 sm:w-20 bg-red-600 mx-auto lg:mx-0 mt-3 sm:mt-4 mb-3 sm:mb-4 rounded-full"></div>
-                            <p class="text-sm sm:text-base lg:text-lg text-slate-200 max-w-md mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
+                            <p class="text-sm sm:text-base lg:text-lg text-slate-200 max-w-md mx-auto lg:mx-0">Digitizing every customer relationship and repair journey — from first call to final invoice.</p>
                             <ul class="mt-4 sm:mt-5 space-y-1.5 sm:space-y-2 text-left max-w-md mx-auto lg:mx-0">
                                 <li class="flex items-start gap-2 text-sm sm:text-base text-slate-200">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
-                                    <span>Multi-branch workshop, invoicing and inventory in one place.</span>
+                                    <span><span class="font-semibold text-white">Smart CRM</span> — every customer, vehicle &amp; service history in one place.</span>
                                 </li>
                                 <li class="flex items-start gap-2 text-sm sm:text-base text-slate-200">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
-                                    <span>Built for role-based access — admin, manager, advisor, technician.</span>
+                                    <span><span class="font-semibold text-white">100% Digital</span> — paperless inspections, invoicing &amp; real-time approvals.</span>
                                 </li>
                             </ul>
                         </div>
