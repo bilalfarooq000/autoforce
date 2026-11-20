@@ -3,6 +3,7 @@
     'value' => '',
     'icon' => 'grid',
     'accent' => 'slate',
+    'href' => null,
 ])
 
 @php
@@ -31,15 +32,34 @@
     $svg = $icons[$icon] ?? $icons['grid'];
 @endphp
 
-<div {{ $attributes->merge(['class' => 'relative bg-white rounded-xl border border-gray-200 shadow-sm p-4 overflow-hidden']) }}>
-    <div class="absolute inset-y-0 left-0 w-1 {{ $a['bar'] }}"></div>
-    <div class="flex items-start justify-between gap-2">
-        <div class="min-w-0">
-            <div class="text-xs font-medium text-gray-500 leading-snug">{{ $label }}</div>
-            <div class="text-2xl font-bold text-gray-900 mt-1 tabular-nums">{{ $value }}</div>
+@php
+    $baseClass = 'relative bg-white rounded-xl border border-gray-200 shadow-sm p-4 overflow-hidden block'
+        .($href ? ' hover:shadow-md hover:border-gray-300 transition' : '');
+@endphp
+@if ($href)
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $baseClass]) }}>
+        <div class="absolute inset-y-0 left-0 w-1 {{ $a['bar'] }}"></div>
+        <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0">
+                <div class="text-xs font-medium text-gray-500 leading-snug">{{ $label }}</div>
+                <div class="text-2xl font-bold text-gray-900 mt-1 tabular-nums">{{ $value }}</div>
+            </div>
+            <div class="shrink-0 w-9 h-9 rounded-lg {{ $a['ring'] }} flex items-center justify-center">
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">{!! $svg !!}</svg>
+            </div>
         </div>
-        <div class="shrink-0 w-9 h-9 rounded-lg {{ $a['ring'] }} flex items-center justify-center">
-            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">{!! $svg !!}</svg>
+    </a>
+@else
+    <div {{ $attributes->merge(['class' => $baseClass]) }}>
+        <div class="absolute inset-y-0 left-0 w-1 {{ $a['bar'] }}"></div>
+        <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0">
+                <div class="text-xs font-medium text-gray-500 leading-snug">{{ $label }}</div>
+                <div class="text-2xl font-bold text-gray-900 mt-1 tabular-nums">{{ $value }}</div>
+            </div>
+            <div class="shrink-0 w-9 h-9 rounded-lg {{ $a['ring'] }} flex items-center justify-center">
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">{!! $svg !!}</svg>
+            </div>
         </div>
     </div>
-</div>
+@endif

@@ -21,23 +21,27 @@
 
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-8">
 
+        @php
+            $branchQuery = $viewingBranch ? ['branch' => $viewingBranch->id] : [];
+            $branchIdQuery = $viewingBranch ? ['branch_id' => $viewingBranch->id] : [];
+        @endphp
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-            <x-stat-card label="In Workshop" :value="$stats['vehicles_in_workshop']" icon="car" accent="slate" />
-            <x-stat-card label="Awaiting Diagnosis" :value="$stats['awaiting_diagnosis']" icon="clock" accent="amber" />
-            <x-stat-card label="Awaiting Approval" :value="$stats['awaiting_approval']" icon="clipboard" accent="orange" />
-            <x-stat-card label="In Repair" :value="$stats['in_repair']" icon="wrench" accent="blue" />
-            <x-stat-card label="Ready for Collection" :value="$stats['ready_for_collection']" icon="check-circle" accent="green" />
-            <x-stat-card label="Outstanding Invoices" :value="$stats['outstanding_invoices']" icon="receipt" accent="red" />
-            <x-stat-card label="Outstanding (PKR)" :value="number_format($stats['outstanding_amount'], 0)" icon="cash" accent="red" />
-            <x-stat-card label="Low Stock Items" :value="$stats['low_stock_items']" icon="wrench" accent="red" />
+            <x-stat-card label="In Workshop" :value="$stats['vehicles_in_workshop']" icon="car" accent="slate" href="#job-board" />
+            <x-stat-card label="Awaiting Diagnosis" :value="$stats['awaiting_diagnosis']" icon="clock" accent="amber" href="#col-checked_in" />
+            <x-stat-card label="Awaiting Approval" :value="$stats['awaiting_approval']" icon="clipboard" accent="orange" href="#col-awaiting_approval" />
+            <x-stat-card label="In Repair" :value="$stats['in_repair']" icon="wrench" accent="blue" href="#col-in_repair" />
+            <x-stat-card label="Ready for Collection" :value="$stats['ready_for_collection']" icon="check-circle" accent="green" href="#col-ready_for_collection" />
+            <x-stat-card label="Outstanding Invoices" :value="$stats['outstanding_invoices']" icon="receipt" accent="red" :href="route('staff.finance.index', $branchQuery)" />
+            <x-stat-card label="Outstanding (PKR)" :value="number_format($stats['outstanding_amount'], 0)" icon="cash" accent="red" :href="route('staff.finance.index', $branchQuery)" />
+            <x-stat-card label="Low Stock Items" :value="$stats['low_stock_items']" icon="wrench" accent="red" :href="route('staff.inventory.reports.index', ['tab' => 'low_stock'] + $branchIdQuery)" />
         </div>
 
-        <div>
+        <div id="job-board" class="scroll-mt-4">
             <h3 class="font-semibold text-gray-800 mb-3">Workshop Job Board</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
                 @foreach ($board as $status => $column)
                     @if ($status !== 'completed')
-                        <div class="bg-gray-50/60 rounded-xl border border-gray-200">
+                        <div id="col-{{ $status }}" class="bg-gray-50/60 rounded-xl border border-gray-200 scroll-mt-4">
                             <div class="px-3 py-2.5 border-b border-gray-200 flex justify-between items-center">
                                 <span class="text-xs font-semibold text-gray-600 uppercase tracking-wide">{{ $column['label'] }}</span>
                                 <span class="text-xs bg-gray-200 text-gray-700 rounded-full px-2 py-0.5 font-semibold">{{ $column['items']->count() }}</span>
