@@ -30,8 +30,8 @@
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
-                    <tr>
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
+                    <tr class="hover:bg-red-50/50 transition-colors">
                         <th class="px-4 py-3">Item</th>
                         <th class="px-4 py-3 text-right">Qty</th>
                         <th class="px-4 py-3 text-right">Unit Cost</th>
@@ -40,7 +40,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @foreach ($purchase->items as $item)
-                        <tr>
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3 font-medium">{{ $item->item->name }}</td>
                             <td class="px-4 py-3 text-right">{{ $item->quantity }} {{ $item->item->unit }}</td>
                             <td class="px-4 py-3 text-right">PKR {{ number_format($item->unit_cost, 2) }}</td>

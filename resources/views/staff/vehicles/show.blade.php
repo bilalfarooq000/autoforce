@@ -7,7 +7,7 @@
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('staff.vehicles.edit', $vehicle) }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50">Edit</a>
-                <a href="{{ route('staff.inspections.create', $vehicle) }}" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700">
+                <a href="{{ route('staff.inspections.create', $vehicle) }}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-red-700">
                     + New Inspection
                 </a>
             </div>

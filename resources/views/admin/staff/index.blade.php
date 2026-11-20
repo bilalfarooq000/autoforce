@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Staff Accounts</h2>
-            <a href="{{ route('admin.staff.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700">
+            <a href="{{ route('admin.staff.create') }}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-red-700">
                 + Add Staff
             </a>
         </div>
@@ -21,12 +21,12 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Role</th><th class="px-4 py-3">Branch</th><th class="px-4 py-3">Status</th><th></th></tr>
                 </thead>
                 <tbody class="divide-y">
                     @foreach ($staff as $member)
-                        <tr>
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3">{{ $member->name }}<br><span class="text-xs text-gray-500">{{ $member->email }}</span></td>
                             <td class="px-4 py-3">{{ str($member->roles->first()->name ?? '—')->headline() }}</td>
                             <td class="px-4 py-3">{{ $member->branch->name ?? '—' }}</td>

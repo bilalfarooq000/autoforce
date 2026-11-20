@@ -26,7 +26,7 @@
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Overdue Invoices <span class="text-xs font-normal text-gray-400">(7+ days since issued, still unpaid)</span></div>
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr>
                         <th class="px-4 py-2">Invoice</th>
                         <th class="px-4 py-2">Customer</th>
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($overdueInvoices as $invoice)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-2 font-medium">{{ $invoice->invoice_number }}</td>
                             <td class="px-4 py-2">{{ $invoice->customer->name }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $invoice->issued_at->format('d M Y') }}</td>
@@ -60,7 +60,7 @@
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Pending Approvals</div>
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr>
                         <th class="px-4 py-2">Vehicle</th>
                         <th class="px-4 py-2">Customer</th>
@@ -71,7 +71,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($pendingApprovals as $quotation)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-2 font-medium">{{ $quotation->inspection->vehicle->registration_number }}</td>
                             <td class="px-4 py-2">{{ $quotation->inspection->vehicle->customer->name }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $quotation->created_at->diffForHumans() }}</td>
@@ -92,7 +92,7 @@
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Low Stock Alerts</div>
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr>
                         <th class="px-4 py-2">Item</th>
                         <th class="px-4 py-2">Branch</th>
@@ -103,7 +103,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($lowStockItems as $item)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-2 font-medium text-red-600">{{ $item->name }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $item->branch->name ?? '—' }}</td>
                             <td class="px-4 py-2 text-right">{{ $item->quantity_on_hand }} {{ $item->unit }}</td>

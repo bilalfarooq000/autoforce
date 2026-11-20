@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Invoices</h2>
             @hasanyrole('admin|manager|service_advisor')
-                <a href="{{ route('staff.invoices.select') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
+                <a href="{{ route('staff.invoices.select') }}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-red-700">
                     + Create Invoice
                 </a>
             @endhasanyrole
@@ -26,7 +26,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr>
                         <th class="px-4 py-3">Invoice</th>
                         <th class="px-4 py-3">Vehicle</th>
@@ -40,7 +40,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($invoices as $invoice)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3">
                                 <span class="font-medium">{{ $invoice->invoice_number }}</span>
                             </td>

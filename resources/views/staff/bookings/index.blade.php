@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Bookings</h2>
             @hasanyrole('admin|manager|service_advisor')
-                <a href="{{ route('staff.bookings.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
+                <a href="{{ route('staff.bookings.create') }}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-red-700">
                     + New Booking
                 </a>
             @endhasanyrole
@@ -36,7 +36,7 @@
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr>
                         <th class="px-4 py-3">When</th>
                         <th class="px-4 py-3">Customer</th>
@@ -48,7 +48,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($bookings as $booking)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3 whitespace-nowrap">{{ $booking->requested_at->format('d M, h:i A') }}</td>
                             <td class="px-4 py-3">
                                 <div class="font-medium">{{ $booking->customer_name }}</div>

@@ -14,7 +14,7 @@
                 <a href="{{ route('staff.customers.edit', $customer) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
                     Edit
                 </a>
-                <a href="{{ route('staff.vehicles.create', ['customer' => $customer->id]) }}" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-gray-800">
+                <a href="{{ route('staff.vehicles.create', ['customer' => $customer->id]) }}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-red-700">
                     + Register Vehicle
                 </a>
             </div>

@@ -53,8 +53,8 @@
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">Movement History</div>
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
-                    <tr>
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
+                    <tr class="hover:bg-red-50/50 transition-colors">
                         <th class="px-4 py-3">Date</th>
                         <th class="px-4 py-3">Type</th>
                         <th class="px-4 py-3 text-right">Qty</th>
@@ -65,7 +65,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($item->movements as $m)
-                        <tr>
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3 text-gray-500">{{ $m->created_at->format('d M Y, h:i A') }}</td>
                             <td class="px-4 py-3">{{ $m->typeLabel() }}</td>
                             <td class="px-4 py-3 text-right font-medium {{ $m->signedQuantity() < 0 ? 'text-red-600' : 'text-green-700' }}">

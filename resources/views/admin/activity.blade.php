@@ -7,12 +7,12 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr><th class="px-4 py-3">When</th><th class="px-4 py-3">Who</th><th class="px-4 py-3">Action</th><th class="px-4 py-3">On</th></tr>
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($activities as $activity)
-                        <tr>
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3 text-gray-500">{{ $activity->created_at->format('d M Y, h:i A') }}</td>
                             <td class="px-4 py-3">{{ $activity->causer?->name ?? 'System / Customer' }}</td>
                             <td class="px-4 py-3">

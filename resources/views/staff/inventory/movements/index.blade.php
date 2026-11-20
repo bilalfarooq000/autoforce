@@ -59,7 +59,7 @@
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50/80 text-left text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-200">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
                     <tr>
                         <th class="px-4 py-3">Date</th>
                         <th class="px-4 py-3">Item</th>
@@ -74,7 +74,7 @@
                 </thead>
                 <tbody class="divide-y">
                     @forelse ($movements as $m)
-                        <tr class="hover:bg-gray-50">
+                        <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ $m->created_at->format('d M Y, h:i A') }}</td>
                             <td class="px-4 py-3"><a href="{{ route('staff.inventory.items.show', $m->item) }}" class="text-red-600 hover:underline">{{ $m->item->name ?? '—' }}</a></td>
                             <td class="px-4 py-3 text-gray-600">{{ $m->branch->name ?? '—' }}</td>
