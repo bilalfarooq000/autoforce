@@ -152,8 +152,8 @@
                     <div class="w-full flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-10 lg:gap-16 px-4 sm:px-8 lg:px-16 py-4">
                         <!-- Copy block -->
                         <div class="hidden sm:block w-full max-w-md text-center lg:text-left order-2 lg:order-1">
-                            <span class="inline-block text-red-500 text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase mb-1.5 sm:mb-2">Dealer Management System</span>
-                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>DMS</h1>
+                            <span class="inline-block text-red-500 text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase mb-1.5 sm:mb-2">Garage Management System</span>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>GMS</h1>
                             <div class="h-1 w-16 sm:w-20 bg-red-600 mx-auto lg:mx-0 mt-3 sm:mt-4 mb-3 sm:mb-4 rounded-full"></div>
                             <p class="text-sm sm:text-base lg:text-lg text-slate-200 max-w-md mx-auto lg:mx-0">Digital vehicle inspections, customer transparency and workshop management — in one platform.</p>
                             <ul class="mt-4 sm:mt-5 space-y-1.5 sm:space-y-2 text-left max-w-md mx-auto lg:mx-0">
@@ -170,8 +170,8 @@
 
                         <!-- Compact heading shown only on phones, above the card -->
                         <div class="sm:hidden text-center order-1">
-                            <span class="inline-block text-red-500 text-[10px] font-bold tracking-[0.2em] uppercase mb-1">Dealer Management System</span>
-                            <h1 class="text-3xl font-extrabold italic uppercase text-white tracking-tight leading-none" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span> DMS</h1>
+                            <span class="inline-block text-red-500 text-[10px] font-bold tracking-[0.2em] uppercase mb-1">Garage Management System</span>
+                            <h1 class="text-3xl font-extrabold italic uppercase text-white tracking-tight leading-none" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span> GMS</h1>
                         </div>
 
                         <!-- Login card -->

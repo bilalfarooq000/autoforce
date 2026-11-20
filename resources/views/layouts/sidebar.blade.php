@@ -8,7 +8,7 @@
 <aside class="flex flex-col w-64 bg-black text-slate-200 shrink-0 h-full">
     <div class="px-5 py-5 border-b border-white/10">
         <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-7 w-auto">
-        <div class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase mt-1.5">AutoForce DMS</div>
+        <div class="text-[10px] text-slate-500 font-semibold tracking-wider uppercase mt-1.5">AutoForce GMS</div>
         <div class="text-xs text-slate-400 leading-tight">{{ $brandContext }}</div>
     </div>
 
