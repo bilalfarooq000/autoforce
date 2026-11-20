@@ -93,7 +93,68 @@
                 50%      { box-shadow: 0 0 0 6px rgba(220,38,38,.12), 0 25px 60px -15px rgba(0,0,0,.6); }
             }
             .card-glow {
+                position: relative;
+                overflow: hidden;
                 animation: glowPulse 3.5s ease-in-out infinite;
+            }
+            .card-glow::before {
+                content: "";
+                position: absolute;
+                top: 0; left: -150%;
+                width: 60%; height: 100%;
+                background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.6) 50%, transparent 100%);
+                transform: skewX(-20deg);
+                animation: cardShimmer 5s ease-in-out infinite;
+                animation-delay: 1.4s;
+                pointer-events: none;
+            }
+            @keyframes cardShimmer {
+                0%   { left: -150%; }
+                20%  { left: 150%; }
+                100% { left: 150%; }
+            }
+
+            /* Logo entrance + ambient glow */
+            .logo-wrap {
+                position: relative;
+                display: inline-block;
+            }
+            .logo-wrap img {
+                position: relative;
+                z-index: 2;
+                animation: logoIn .8s cubic-bezier(.22,1,.36,1) both;
+            }
+            .logo-glow {
+                position: absolute;
+                inset: -14px -20px;
+                z-index: 1;
+                background: radial-gradient(circle, rgba(220,38,38,.5) 0%, transparent 70%);
+                filter: blur(8px);
+                opacity: 0;
+                animation: logoGlowPulse 3s ease-in-out infinite;
+                animation-delay: .9s;
+                pointer-events: none;
+            }
+            @keyframes logoIn {
+                0%   { opacity: 0; transform: translateY(-14px) scale(.94); }
+                100% { opacity: 1; transform: translateY(0) scale(1); }
+            }
+            @keyframes logoGlowPulse {
+                0%, 100% { opacity: .3; transform: scale(1); }
+                50%      { opacity: .65; transform: scale(1.15); }
+            }
+
+            /* Staggered reveal for the copy block */
+            .reveal {
+                opacity: 0;
+                animation: floatCard .7s cubic-bezier(.22,1,.36,1) both;
+            }
+            @keyframes growLine {
+                0%   { width: 0; }
+                100% { width: 100%; }
+            }
+            .grow-line {
+                animation: growLine .6s ease-out both;
             }
 
             .vh-screen {
@@ -145,23 +206,26 @@
             <div class="vh-screen relative z-20 flex flex-col">
                 <!-- Top brand strip -->
                 <div class="px-4 sm:px-6 lg:px-10 pt-4 sm:pt-5">
-                    <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-7 sm:h-8 lg:h-9 w-auto drop-shadow-lg">
+                    <span class="logo-wrap">
+                        <span class="logo-glow"></span>
+                        <img src="{{ asset('images/autoforce-logo-white.png') }}" alt="AutoForce" class="h-8 sm:h-9 lg:h-10 w-auto drop-shadow-lg">
+                    </span>
                 </div>
 
                 <div class="flex-1 flex items-center min-h-0 overflow-y-auto pb-16 sm:pb-24 lg:pb-[118px]">
                     <div class="w-full flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-10 lg:gap-16 px-4 sm:px-8 lg:px-16 py-4">
                         <!-- Copy block -->
                         <div class="hidden sm:block w-full max-w-md text-center lg:text-left order-2 lg:order-1">
-                            <span class="inline-block text-red-500 text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase mb-1.5 sm:mb-2">Garage Management System</span>
-                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg);">Auto<span class="text-red-500">Force</span><br>GMS</h1>
-                            <div class="h-1 w-16 sm:w-20 bg-red-600 mx-auto lg:mx-0 mt-3 sm:mt-4 mb-3 sm:mb-4 rounded-full"></div>
-                            <p class="text-sm sm:text-base lg:text-lg text-slate-200 max-w-md mx-auto lg:mx-0">Digitizing every customer relationship and repair journey — from first call to final invoice.</p>
+                            <span class="reveal inline-block text-red-500 text-xs sm:text-sm font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase mb-1.5 sm:mb-2" style="animation-delay:.05s">Garage Management System</span>
+                            <h1 class="reveal text-4xl sm:text-5xl lg:text-6xl font-extrabold italic uppercase text-white tracking-tight leading-[0.95]" style="transform: skewX(-3deg); animation-delay:.15s">Auto<span class="text-red-500">Force</span><br>GMS</h1>
+                            <div class="h-1 w-16 sm:w-20 bg-red-600 mx-auto lg:mx-0 mt-3 sm:mt-4 mb-3 sm:mb-4 rounded-full grow-line" style="animation-delay:.5s"></div>
+                            <p class="reveal text-sm sm:text-base lg:text-lg text-slate-200 max-w-md mx-auto lg:mx-0" style="animation-delay:.6s">Digitizing every customer relationship and repair journey — from first call to final invoice.</p>
                             <ul class="mt-4 sm:mt-5 space-y-1.5 sm:space-y-2 text-left max-w-md mx-auto lg:mx-0">
-                                <li class="flex items-start gap-2 text-sm sm:text-base text-slate-200">
+                                <li class="reveal flex items-start gap-2 text-sm sm:text-base text-slate-200" style="animation-delay:.75s">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
                                     <span><span class="font-semibold text-white">Smart CRM</span> — every customer, vehicle &amp; service history in one place.</span>
                                 </li>
-                                <li class="flex items-start gap-2 text-sm sm:text-base text-slate-200">
+                                <li class="reveal flex items-start gap-2 text-sm sm:text-base text-slate-200" style="animation-delay:.9s">
                                     <span class="text-red-500 mt-0.5">&bull;</span>
                                     <span><span class="font-semibold text-white">100% Digital</span> — paperless inspections, invoicing &amp; real-time approvals.</span>
                                 </li>
@@ -175,7 +239,7 @@
                         </div>
 
                         <!-- Login card -->
-                        <div class="card-glow animate-float-in w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl border-t-4 border-red-600 px-6 py-7 sm:px-8 sm:py-9 lg:px-10 lg:py-10 order-2 lg:order-2">
+                        <div class="card-glow animate-float-in w-full max-w-md bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl border-t-4 border-red-600 px-6 py-7 sm:px-8 sm:py-9 lg:px-10 lg:py-10 order-2 lg:order-2" style="animation-delay:.25s">
                             {{ $slot }}
                         </div>
                     </div>
