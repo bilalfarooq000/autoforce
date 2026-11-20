@@ -13,6 +13,52 @@
             <x-stat-card label="Revenue Collected (PKR)" :value="number_format($companyStats['total_revenue'])" icon="cash" accent="green" />
         </div>
 
+        @if ($branches->isNotEmpty())
+            @php
+                $chartLabels = $branches->pluck('name');
+                $chartOutstanding = $branches->pluck('outstanding_amount');
+                $chartCollected = $branches->pluck('revenue_collected');
+                $chartStaff = $branches->pluck('staff_count');
+                $chartVehicles = $branches->pluck('vehicles_count');
+                $chartActiveJobs = $branches->pluck('active_jobs');
+                $chartAwaiting = $branches->pluck('awaiting_approval');
+            @endphp
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="font-semibold text-gray-800 mb-1">Revenue by Branch</h3>
+                    <p class="text-xs text-gray-500 mb-2">Outstanding vs. collected, per branch (PKR)</p>
+                    <div id="revenueChartLegend" class="mb-2"></div>
+                    <div style="position: relative; height: 260px;">
+                        <canvas id="revenueChart" role="img" aria-label="Bar chart comparing outstanding and collected revenue per branch">Revenue by branch, outstanding vs collected.</canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="font-semibold text-gray-800 mb-1">Workshop Activity by Branch</h3>
+                    <p class="text-xs text-gray-500 mb-2">Active jobs vs. approvals awaiting decision</p>
+                    <div id="activityChartLegend" class="mb-2"></div>
+                    <div style="position: relative; height: 260px;">
+                        <canvas id="activityChart" role="img" aria-label="Bar chart comparing active jobs and pending approvals per branch">Workshop activity by branch, active jobs vs awaiting approval.</canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="font-semibold text-gray-800 mb-1">Staff &amp; Vehicles by Branch</h3>
+                    <p class="text-xs text-gray-500 mb-2">Headcount and registered vehicles, per branch</p>
+                    <div id="resourceChartLegend" class="mb-2"></div>
+                    <div style="position: relative; height: 260px;">
+                        <canvas id="resourceChart" role="img" aria-label="Bar chart comparing staff count and vehicle count per branch">Staff and vehicles by branch.</canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="font-semibold text-gray-800 mb-1">Company Revenue Split</h3>
+                    <p class="text-xs text-gray-500 mb-2">Total outstanding vs. total collected, all branches</p>
+                    <div id="splitChartLegend" class="mb-2"></div>
+                    <div style="position: relative; height: 260px;">
+                        <canvas id="splitChart" role="img" aria-label="Doughnut chart of total outstanding versus total collected revenue">Total outstanding vs total collected revenue.</canvas>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div>
             <div class="flex justify-between items-center mb-3">
                 <h3 class="font-semibold text-gray-800">Branches</h3>
@@ -57,4 +103,97 @@
             </div>
         </div>
     </div>
+
+    @if ($branches->isNotEmpty())
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+        <script>
+            const chartLabels = {{ Js::from($chartLabels) }};
+            const brandRed = '#dc2626';
+            const brandGreen = '#16a34a';
+            const brandBlue = '#2563eb';
+            const brandAmber = '#d97706';
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+                    y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } },
+                },
+            };
+
+            function legend(container, items) {
+                const el = document.getElementById(container);
+                el.innerHTML = items.map(i => `<span style="display:inline-flex;align-items:center;gap:6px;margin-right:16px;font-size:12px;color:#6b7280"><span style="width:10px;height:10px;border-radius:3px;background:${i.color};display:inline-block"></span>${i.label}</span>`).join('');
+            }
+
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        { label: 'Outstanding', data: {{ Js::from($chartOutstanding) }}, backgroundColor: brandRed, borderRadius: 4, maxBarThickness: 28 },
+                        { label: 'Collected', data: {{ Js::from($chartCollected) }}, backgroundColor: brandGreen, borderRadius: 4, maxBarThickness: 28 },
+                    ],
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ': PKR ' + ctx.parsed.y.toLocaleString() } },
+                    },
+                },
+            });
+            legend('revenueChartLegend', [{ color: brandRed, label: 'Outstanding' }, { color: brandGreen, label: 'Collected' }]);
+
+            new Chart(document.getElementById('activityChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        { label: 'Active Jobs', data: {{ Js::from($chartActiveJobs) }}, backgroundColor: brandBlue, borderRadius: 4, maxBarThickness: 28 },
+                        { label: 'Awaiting Approval', data: {{ Js::from($chartAwaiting) }}, backgroundColor: brandAmber, borderRadius: 4, maxBarThickness: 28 },
+                    ],
+                },
+                options: commonOptions,
+            });
+            legend('activityChartLegend', [{ color: brandBlue, label: 'Active Jobs' }, { color: brandAmber, label: 'Awaiting Approval' }]);
+
+            new Chart(document.getElementById('resourceChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        { label: 'Staff', data: {{ Js::from($chartStaff) }}, backgroundColor: '#64748b', borderRadius: 4, maxBarThickness: 28 },
+                        { label: 'Vehicles', data: {{ Js::from($chartVehicles) }}, backgroundColor: brandBlue, borderRadius: 4, maxBarThickness: 28 },
+                    ],
+                },
+                options: commonOptions,
+            });
+            legend('resourceChartLegend', [{ color: '#64748b', label: 'Staff' }, { color: brandBlue, label: 'Vehicles' }]);
+
+            new Chart(document.getElementById('splitChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Outstanding', 'Collected'],
+                    datasets: [{
+                        data: [{{ $companyStats['total_outstanding'] }}, {{ $companyStats['total_revenue'] }}],
+                        backgroundColor: [brandRed, brandGreen],
+                        borderColor: '#ffffff',
+                        borderWidth: 3,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (ctx) => ctx.label + ': PKR ' + ctx.parsed.toLocaleString() } },
+                    },
+                },
+            });
+            legend('splitChartLegend', [{ color: brandRed, label: 'Outstanding' }, { color: brandGreen, label: 'Collected' }]);
+        </script>
+    @endif
 </x-app-layout>
