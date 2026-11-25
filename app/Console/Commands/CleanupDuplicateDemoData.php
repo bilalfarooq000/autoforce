@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Booking;
 use App\Models\Inspection;
+use App\Models\InspectionItem;
 use App\Models\Invoice;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -161,8 +162,20 @@ class CleanupDuplicateDemoData extends Command
             }
         }
 
-        if ($bookings->isEmpty() && $vehicles->isEmpty()) {
-            $this->info('No QA-retest booking or QAT-% vehicle artifacts found.');
+        // A stray ad-hoc finding added while live-verifying the "+ Add Finding
+        // Outside Checklist" button fix on this round's QA retest.
+        $items = InspectionItem::where('title', 'like', 'QA verify:%')->get();
+
+        foreach ($items as $item) {
+            $this->line("Inspection item #{$item->id} \"{$item->title}\" — ".($dryRun ? 'would delete' : 'deleting').'.');
+
+            if (! $dryRun) {
+                $item->delete();
+            }
+        }
+
+        if ($bookings->isEmpty() && $vehicles->isEmpty() && $items->isEmpty()) {
+            $this->info('No QA-retest booking, QAT-% vehicle, or stray finding artifacts found.');
         }
     }
 
