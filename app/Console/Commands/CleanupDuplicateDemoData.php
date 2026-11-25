@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Booking;
 use App\Models\Inspection;
+use App\Models\Invoice;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
@@ -26,10 +27,69 @@ class CleanupDuplicateDemoData extends Command
         $dryRun = $this->option('dry-run');
 
         $this->cleanupDuplicateInspections($dryRun);
+        $this->cleanupDuplicateInvoices($dryRun);
         $this->cleanupKnownTestCustomers($dryRun);
         $this->cleanupQaRetestArtifacts($dryRun);
 
         return self::SUCCESS;
+    }
+
+    /**
+     * The duplicate-inspection cleanup above only reunites inspections — but
+     * invoices.inspection_id is nullOnDelete(), not cascadeOnDelete(), so an
+     * earlier run that deduplicated inspections left their invoices behind as
+     * orphans (e.g. Fatima Noor's 22 identical PKR 15,000 invoices for one
+     * "AC not cooling properly" job, flagged in the 20 Nov 2026 QA retest).
+     * This catches invoices for the same vehicle with identical totals AND
+     * identical line items (not just a coincidental matching total).
+     */
+    private function cleanupDuplicateInvoices(bool $dryRun): void
+    {
+        $groups = Invoice::select('vehicle_id', 'subtotal', 'tax', 'total', DB::raw('COUNT(*) as total_count'))
+            ->groupBy('vehicle_id', 'subtotal', 'tax', 'total')
+            ->having('total_count', '>', 1)
+            ->get();
+
+        if ($groups->isEmpty()) {
+            $this->info('No duplicate invoices found.');
+
+            return;
+        }
+
+        $removed = 0;
+        $signature = fn ($invoice) => $invoice->items
+            ->map(fn ($item) => $item->description.'|'.$item->amount)
+            ->sort()->values()->implode(',');
+
+        foreach ($groups as $group) {
+            $candidates = Invoice::where('vehicle_id', $group->vehicle_id)
+                ->where('subtotal', $group->subtotal)
+                ->where('tax', $group->tax)
+                ->where('total', $group->total)
+                ->with('items')
+                ->get();
+
+            foreach ($candidates->groupBy($signature) as $sameShapeInvoices) {
+                if ($sameShapeInvoices->count() <= 1) {
+                    continue;
+                }
+
+                $keep = $sameShapeInvoices->sortBy('id')->first();
+                $duplicates = $sameShapeInvoices->where('id', '!=', $keep->id);
+
+                $this->line("Vehicle #{$group->vehicle_id} — keeping invoice {$keep->invoice_number} (PKR {$group->total}), removing {$duplicates->count()} duplicate(s): ".$duplicates->pluck('invoice_number')->implode(', ').'.');
+
+                if (! $dryRun) {
+                    foreach ($duplicates as $duplicate) {
+                        $duplicate->delete();
+                    }
+                }
+
+                $removed += $duplicates->count();
+            }
+        }
+
+        $this->info(($dryRun ? '[DRY RUN] Would remove ' : 'Removed ').$removed.' duplicate invoice(s) (and their cascaded items/payments).');
     }
 
     private function cleanupDuplicateInspections(bool $dryRun): void

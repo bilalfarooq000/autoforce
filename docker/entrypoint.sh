@@ -30,8 +30,14 @@ fi
 # One-off repair for the duplicate demo jobs created while RUN_SEEDERS ran on
 # every redeploy (fixed above) — idempotent, so leaving this flag on is harmless,
 # but it's meant to be turned off again once the existing duplicates are gone.
+# CLEANUP_DUPLICATES_DRY_RUN prints what would be removed without deleting
+# anything, for reviewing in the deploy logs before running it for real.
 if [ "${CLEANUP_DUPLICATES:-false}" = "true" ]; then
-    php artisan autoforce:cleanup-duplicate-demo-data || true
+    if [ "${CLEANUP_DUPLICATES_DRY_RUN:-false}" = "true" ]; then
+        php artisan autoforce:cleanup-duplicate-demo-data --dry-run || true
+    else
+        php artisan autoforce:cleanup-duplicate-demo-data || true
+    fi
 fi
 
 php-fpm -D
