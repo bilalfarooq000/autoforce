@@ -8,7 +8,7 @@
             @forelse ($vehicles as $vehicle)
                 <a href="{{ route('customer.vehicles.show', $vehicle) }}" class="bg-white rounded-lg shadow p-5 hover:shadow-md transition">
                     <div class="font-semibold text-lg">{{ $vehicle->registration_number }}</div>
-                    <div class="text-sm text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }})</div>
+                    <div class="text-sm text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }}@if($vehicle->year) ({{ $vehicle->year }})@endif</div>
                     <div class="text-xs text-gray-500 mt-2">{{ $vehicle->inspections_count }} inspection(s) · {{ $vehicle->invoices_count }} invoice(s)</div>
                 </a>
             @empty

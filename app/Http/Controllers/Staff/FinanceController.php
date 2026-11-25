@@ -37,7 +37,8 @@ class FinanceController extends Controller
             'total_invoiced' => $allForTotals->sum('total'),
             'total_collected' => $allForTotals->sum(fn ($i) => $i->amountPaid()),
             'total_outstanding' => $allForTotals->sum(fn ($i) => $i->balanceDue()),
-            'unpaid_count' => $allForTotals->where('status', '!=', 'paid')->count(),
+            'unpaid_count' => $allForTotals->where('status', 'unpaid')->count(),
+            'partial_count' => $allForTotals->where('status', 'partial')->count(),
         ];
 
         $branches = $user->hasRole('admin') ? \App\Models\Branch::all() : collect();

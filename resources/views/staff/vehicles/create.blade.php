@@ -44,6 +44,24 @@
                 @endif
             </div>
 
+            @hasrole('admin')
+                <div>
+                    <h3 class="font-semibold text-gray-700 mb-3">Branch</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <x-input-label for="branch_id" value="Register To Branch" />
+                            <select id="branch_id" name="branch_id" class="block mt-1 w-full border-gray-300 focus:border-red-500 focus:ring-red-500 rounded-md shadow-sm" required>
+                                <option value="">Select branch…</option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}" @selected(old('branch_id') == $branch->id)>{{ $branch->name }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('branch_id')" class="mt-2" />
+                        </div>
+                    </div>
+                </div>
+            @endhasrole
+
             <div>
                 <h3 class="font-semibold text-gray-700 mb-3">Vehicle Identification</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -65,18 +83,22 @@
                     <div>
                         <x-input-label for="year" value="Year" />
                         <x-text-input id="year" name="year" class="block mt-1 w-full" :value="old('year')" placeholder="2020" />
+                        <x-input-error :messages="$errors->get('year')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="chassis_number" value="Chassis Number" />
                         <x-text-input id="chassis_number" name="chassis_number" class="block mt-1 w-full" :value="old('chassis_number')" />
+                        <x-input-error :messages="$errors->get('chassis_number')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="engine_number" value="Engine Number" />
                         <x-text-input id="engine_number" name="engine_number" class="block mt-1 w-full" :value="old('engine_number')" />
+                        <x-input-error :messages="$errors->get('engine_number')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="color" value="Color" />
                         <x-text-input id="color" name="color" class="block mt-1 w-full" :value="old('color')" />
+                        <x-input-error :messages="$errors->get('color')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="mileage" value="Mileage (km)" />
@@ -86,6 +108,7 @@
                     <div>
                         <x-input-label for="photo" value="Vehicle Photo" />
                         <input id="photo" name="photo" type="file" accept="image/*" class="block mt-1 w-full text-sm" />
+                        <x-input-error :messages="$errors->get('photo')" class="mt-2" />
                     </div>
                 </div>
             </div>
@@ -102,6 +125,7 @@
                             <option value="truck">Truck</option>
                             <option value="other">Other</option>
                         </select>
+                        <x-input-error :messages="$errors->get('vehicle_type')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="fuel_type" value="Fuel Type" />
@@ -112,6 +136,7 @@
                             <option value="electric">Electric</option>
                             <option value="cng">CNG</option>
                         </select>
+                        <x-input-error :messages="$errors->get('fuel_type')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="transmission" value="Transmission" />
@@ -119,6 +144,7 @@
                             <option value="manual">Manual</option>
                             <option value="automatic">Automatic</option>
                         </select>
+                        <x-input-error :messages="$errors->get('transmission')" class="mt-2" />
                     </div>
                 </div>
             </div>

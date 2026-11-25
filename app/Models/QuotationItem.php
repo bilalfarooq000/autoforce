@@ -13,7 +13,7 @@ class QuotationItem extends Model
     public const STATUSES = ['pending' => 'Pending', 'in_progress' => 'In Progress', 'done' => 'Done'];
 
     protected $fillable = [
-        'quotation_id', 'inspection_item_id', 'description', 'amount',
+        'quotation_id', 'inspection_item_id', 'description', 'type', 'amount',
         'status', 'assigned_to', 'started_at', 'completed_at',
     ];
 

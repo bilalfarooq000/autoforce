@@ -25,7 +25,8 @@
             $branchQuery = $viewingBranch ? ['branch' => $viewingBranch->id] : [];
             $branchIdQuery = $viewingBranch ? ['branch_id' => $viewingBranch->id] : [];
         @endphp
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-4">
+            <x-stat-card label="New Booking Requests" :value="$stats['new_booking_requests']" icon="clock" accent="blue" :href="route('staff.bookings.index', ['status' => 'pending'])" />
             <x-stat-card label="In Workshop" :value="$stats['vehicles_in_workshop']" icon="car" accent="slate" href="#job-board" />
             <x-stat-card label="Awaiting Diagnosis" :value="$stats['awaiting_diagnosis']" icon="clock" accent="amber" href="#col-checked_in" />
             <x-stat-card label="Awaiting Approval" :value="$stats['awaiting_approval']" icon="clipboard" accent="orange" href="#col-awaiting_approval" />

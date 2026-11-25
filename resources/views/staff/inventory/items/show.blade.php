@@ -28,11 +28,11 @@
             </div>
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
                 <div class="text-xs text-gray-500">Cost / Selling</div>
-                <div class="text-lg font-bold text-gray-900">PKR {{ number_format($item->cost_price, 2) }} / {{ number_format($item->selling_price, 2) }}</div>
+                <div class="text-lg font-bold text-gray-900">PKR {{ number_format($item->cost_price) }} / {{ number_format($item->selling_price) }}</div>
             </div>
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
                 <div class="text-xs text-gray-500">Stock Value</div>
-                <div class="text-2xl font-bold text-gray-900">PKR {{ number_format($item->stockValue(), 2) }}</div>
+                <div class="text-2xl font-bold text-gray-900">PKR {{ number_format($item->stockValue()) }}</div>
             </div>
         </div>
 

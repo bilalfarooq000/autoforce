@@ -9,7 +9,7 @@
             ? [['description' => '', 'type' => 'labor', 'quantity' => 1, 'unit_price' => 0, 'warranty_months' => null]]
             : $quotationItems->map(fn ($qi) => [
                 'description' => $qi->description,
-                'type' => 'labor',
+                'type' => $qi->type ?? 'labor',
                 'quantity' => 1,
                 'unit_price' => (float) $qi->amount,
                 'warranty_months' => null,

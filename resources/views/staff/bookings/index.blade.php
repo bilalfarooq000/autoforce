@@ -18,7 +18,11 @@
                     @foreach ($branches as $branch)
                         <div class="flex items-center gap-2 text-sm min-w-0">
                             <span class="text-gray-600 w-28 shrink-0">{{ $branch->name }}:</span>
-                            <code class="text-xs bg-gray-50 px-2 py-1 rounded text-gray-700 truncate min-w-0">{{ route('portal.book.show', $branch) }}</code>
+                            @if ($branch->is_active)
+                                <code class="text-xs bg-gray-50 px-2 py-1 rounded text-gray-700 truncate min-w-0">{{ route('portal.book.show', $branch) }}</code>
+                            @else
+                                <span class="text-xs text-amber-600 font-medium">Branch inactive — don't share this link</span>
+                            @endif
                         </div>
                     @endforeach
                 </div>
@@ -83,7 +87,7 @@
                                             </form>
                                         @endif
                                         <a href="{{ route('staff.bookings.convert.create', $booking) }}" class="text-xs text-red-600 hover:underline ml-2">Check In</a>
-                                        <form method="POST" action="{{ route('staff.bookings.status', $booking) }}" class="inline">
+                                        <form method="POST" action="{{ route('staff.bookings.status', $booking) }}" class="inline" onsubmit="return confirm('Cancel this booking for {{ addslashes($booking->customer_name) }}?')">
                                             @csrf @method('PATCH')
                                             <input type="hidden" name="status" value="cancelled">
                                             <button type="submit" class="text-xs text-gray-500 hover:underline ml-2">Cancel</button>

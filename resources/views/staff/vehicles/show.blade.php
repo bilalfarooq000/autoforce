@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between flex-wrap gap-2">
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $vehicle->registration_number }}</h2>
-                <p class="text-sm text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }}) · {{ $vehicle->customer->name }} · {{ $vehicle->customer->phone }}</p>
+                <p class="text-sm text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }}@if($vehicle->year) ({{ $vehicle->year }})@endif · {{ $vehicle->customer->name }} · {{ $vehicle->customer->phone }}</p>
             </div>
             <div class="flex gap-2">
                 <a href="{{ route('staff.vehicles.edit', $vehicle) }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50">Edit</a>

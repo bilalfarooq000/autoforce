@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Booking;
 use App\Models\Inspection;
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -25,6 +27,7 @@ class CleanupDuplicateDemoData extends Command
 
         $this->cleanupDuplicateInspections($dryRun);
         $this->cleanupKnownTestCustomers($dryRun);
+        $this->cleanupQaRetestArtifacts($dryRun);
 
         return self::SUCCESS;
     }
@@ -65,9 +68,47 @@ class CleanupDuplicateDemoData extends Command
         $this->info(($dryRun ? '[DRY RUN] Would remove ' : 'Removed ').$removed.' duplicate inspection(s) (and their quotations/invoices/payments via cascade).');
     }
 
+    /**
+     * Test data explicitly called out in the 20 Nov 2026 QA retest report:
+     * customer "Test Inam" / booking #3, and the two QAT-prefixed vehicles
+     * created while walking the full booking-to-collection flow.
+     */
+    private function cleanupQaRetestArtifacts(bool $dryRun): void
+    {
+        $bookings = Booking::where('customer_phone', '0300-1112233')
+            ->orWhere('customer_name', 'like', '%Test Inam%')
+            ->get();
+
+        foreach ($bookings as $booking) {
+            $this->line("Booking #{$booking->id} \"{$booking->customer_name}\" — ".($dryRun ? 'would delete' : 'deleting').'.');
+
+            if (! $dryRun) {
+                $booking->delete();
+            }
+        }
+
+        // Deleting the customer below cascades their vehicles (and those
+        // vehicles' inspections/invoices/payments), but QAT-% vehicles are
+        // matched directly too in case one was registered under a different
+        // customer account during testing.
+        $vehicles = Vehicle::where('registration_number', 'like', 'QAT-%')->get();
+
+        foreach ($vehicles as $vehicle) {
+            $this->line("Vehicle {$vehicle->registration_number} (#{$vehicle->id}) — ".($dryRun ? 'would delete' : 'deleting').' (and its jobs/invoices/payments via cascade).');
+
+            if (! $dryRun) {
+                $vehicle->delete();
+            }
+        }
+
+        if ($bookings->isEmpty() && $vehicles->isEmpty()) {
+            $this->info('No QA-retest booking or QAT-% vehicle artifacts found.');
+        }
+    }
+
     private function cleanupKnownTestCustomers(bool $dryRun): void
     {
-        $phones = ['0300-7778889', '0300-7778890', 'abc'];
+        $phones = ['0300-7778889', '0300-7778890', 'abc', '0300-1112233'];
 
         $customers = User::role('customer')->whereIn('phone', $phones)->get();
 

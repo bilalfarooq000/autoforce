@@ -33,16 +33,19 @@
             </div>
             <div>
                 <x-input-label for="branch_id" value="Branch" />
-                <select id="branch_id" name="branch_id" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm">
+                <select id="branch_id" name="branch_id" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+                    <option value="" disabled selected>Select branch…</option>
                     @foreach ($branches as $branch)
-                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                        <option value="{{ $branch->id }}" @selected(old('branch_id') == $branch->id)>{{ $branch->name }}</option>
                     @endforeach
                 </select>
+                <p class="text-xs text-gray-500 mt-1">Not used for Admin accounts, which have access to every branch.</p>
+                <x-input-error :messages="$errors->get('branch_id')" class="mt-2" />
             </div>
             <div x-data="{ show: false }">
                 <x-input-label for="password" value="Temporary Password" />
                 <div class="relative mt-1">
-                    <input id="password" name="password" :type="show ? 'text' : 'password'" class="block w-full rounded-md border-gray-300 shadow-sm pr-16" required>
+                    <input id="password" name="password" type="password" :type="show ? 'text' : 'password'" class="block w-full rounded-md border-gray-300 shadow-sm pr-16" required>
                     <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 px-3 text-xs text-gray-500 hover:text-gray-800" x-text="show ? 'Hide' : 'Show'"></button>
                 </div>
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />

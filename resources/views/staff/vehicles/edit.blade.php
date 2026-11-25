@@ -17,34 +17,42 @@
                 <div>
                     <x-input-label for="make" value="Make" />
                     <x-text-input id="make" name="make" class="block mt-1 w-full" :value="old('make', $vehicle->make)" required />
+                    <x-input-error :messages="$errors->get('make')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="model" value="Model" />
                     <x-text-input id="model" name="model" class="block mt-1 w-full" :value="old('model', $vehicle->model)" required />
+                    <x-input-error :messages="$errors->get('model')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="year" value="Year" />
                     <x-text-input id="year" name="year" class="block mt-1 w-full" :value="old('year', $vehicle->year)" />
+                    <x-input-error :messages="$errors->get('year')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="chassis_number" value="Chassis Number" />
                     <x-text-input id="chassis_number" name="chassis_number" class="block mt-1 w-full" :value="old('chassis_number', $vehicle->chassis_number)" />
+                    <x-input-error :messages="$errors->get('chassis_number')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="engine_number" value="Engine Number" />
                     <x-text-input id="engine_number" name="engine_number" class="block mt-1 w-full" :value="old('engine_number', $vehicle->engine_number)" />
+                    <x-input-error :messages="$errors->get('engine_number')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="color" value="Color" />
                     <x-text-input id="color" name="color" class="block mt-1 w-full" :value="old('color', $vehicle->color)" />
+                    <x-input-error :messages="$errors->get('color')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="mileage" value="Mileage (km)" />
                     <x-text-input id="mileage" name="mileage" type="number" class="block mt-1 w-full" :value="old('mileage', $vehicle->mileage)" required />
+                    <x-input-error :messages="$errors->get('mileage')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="photo" value="Vehicle Photo" />
                     <input id="photo" name="photo" type="file" accept="image/*" class="block mt-1 w-full text-sm" />
+                    <x-input-error :messages="$errors->get('photo')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="vehicle_type" value="Vehicle Type" />
@@ -53,6 +61,7 @@
                             <option value="{{ $type }}" @selected($vehicle->vehicle_type === $type)>{{ ucfirst($type) }}</option>
                         @endforeach
                     </select>
+                    <x-input-error :messages="$errors->get('vehicle_type')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="fuel_type" value="Fuel Type" />
@@ -61,6 +70,7 @@
                             <option value="{{ $fuel }}" @selected($vehicle->fuel_type === $fuel)>{{ ucfirst($fuel) }}</option>
                         @endforeach
                     </select>
+                    <x-input-error :messages="$errors->get('fuel_type')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="transmission" value="Transmission" />
@@ -69,6 +79,7 @@
                             <option value="{{ $t }}" @selected($vehicle->transmission === $t)>{{ ucfirst($t) }}</option>
                         @endforeach
                     </select>
+                    <x-input-error :messages="$errors->get('transmission')" class="mt-2" />
                 </div>
                 <div>
                     <x-input-label for="purchase_date" value="Purchase Date" />

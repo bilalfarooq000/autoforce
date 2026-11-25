@@ -103,6 +103,9 @@
 
     <div class="footer">
         AutoForce UK &middot; This is a system-generated invoice for the vehicle and job referenced above.<br>
+        @if ($invoice->inspection)
+            <a href="{{ $invoice->inspection->portalUrl() }}">View this job and invoice online →</a><br>
+        @endif
         Thank you for choosing AutoForce.
     </div>
 </body>

@@ -7,9 +7,16 @@
                 </h2>
                 <p class="text-sm text-gray-500">{{ $inspection->vehicle->customer->name }} · {{ $inspection->vehicle->customer->phone }}</p>
             </div>
-            <span class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium">
-                {{ $inspection->statusLabel() }}
-            </span>
+            <div class="flex items-center gap-2">
+                @if ($inspection->technician)
+                    <span class="text-xs px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-medium">
+                        Technician: {{ $inspection->technician->name }}
+                    </span>
+                @endif
+                <span class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-medium">
+                    {{ $inspection->statusLabel() }}
+                </span>
+            </div>
         </div>
     </x-slot>
 
@@ -19,7 +26,10 @@
             <div class="rounded-md bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm">{{ $message }}</div>
         @enderror
         @error('tasks')
-            <div class="rounded-md bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm">{{ $message }}</div>
+            <div class="rounded-md bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm flex flex-wrap items-center justify-between gap-2">
+                <span>{{ $message }}</span>
+                <a href="{{ route('staff.quotations.create', $inspection) }}" class="font-medium underline shrink-0">View repair tasks →</a>
+            </div>
         @enderror
 
         <!-- Lifecycle actions -->
@@ -40,8 +50,14 @@
             @if (in_array($inspection->status, ['checked_in', 'inspecting']))
                 <form method="POST" action="{{ route('staff.inspections.ready-no-repair', $inspection) }}" onsubmit="return confirm('No repair needed — mark ready for collection?')">
                     @csrf @method('PATCH')
-                    <x-secondary-button>No Repair Needed — Ready for Collection</x-secondary-button>
+                    <x-secondary-button type="submit">No Repair Needed — Ready for Collection</x-secondary-button>
                 </form>
+            @endif
+
+            @if (! in_array($inspection->status, ['checked_in', 'inspecting']))
+                <a href="{{ route('staff.quotations.create', $inspection) }}" class="inline-flex items-center px-4 py-2 border border-red-300 text-red-700 rounded-lg text-sm font-medium hover:bg-red-50">
+                    {{ $inspection->quotation ? 'View Quotation / Repair Tasks' : 'Build Quotation' }}
+                </a>
             @endif
 
             @if ($inspection->status === 'in_repair')
@@ -52,10 +68,21 @@
             @endif
 
             @if ($inspection->status === 'ready_for_collection')
-                <form method="POST" action="{{ route('staff.inspections.collected', $inspection) }}" onsubmit="return confirm('Confirm vehicle has been collected by the customer?')">
-                    @csrf @method('PATCH')
-                    <x-primary-button>Mark Vehicle Collected</x-primary-button>
-                </form>
+                <div x-data="{ confirming: false }" class="relative">
+                    <x-primary-button type="button" @click="confirming = true">Mark Vehicle Collected</x-primary-button>
+
+                    <div x-show="confirming" x-cloak @click.outside="confirming = false"
+                         class="absolute z-10 top-full mt-2 left-0 w-80 bg-white rounded-lg shadow-lg border border-gray-200 p-4">
+                        <p class="text-sm text-gray-700">Confirm this vehicle has been collected by the customer?</p>
+                        <div class="flex justify-end gap-2 mt-3">
+                            <button type="button" @click="confirming = false" class="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800">Cancel</button>
+                            <form method="POST" action="{{ route('staff.inspections.collected', $inspection) }}">
+                                @csrf @method('PATCH')
+                                <x-primary-button>Confirm Collected</x-primary-button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             @endif
 
             @if ($inspection->status === 'completed')
@@ -91,17 +118,26 @@
                  x-data="{
                      items: { @foreach ($checklistItems->flatten() as $item) {{ $item->id }}: {{ $item->urgency ? "'{$item->urgency}'" : 'null' }}, @endforeach },
                      dirty: false,
+                     submitting: false,
                      set(id, value) { this.items[id] = value; this.dirty = true; },
+                     markAllGood() { Object.keys(this.items).forEach(id => this.set(id, 'satisfactory')); },
+                     get checkedCount() { return Object.values(this.items).filter(v => v !== null).length; },
                  }"
+                 x-init="window.addEventListener('beforeunload', (e) => { if (dirty && !submitting) { e.preventDefault(); e.returnValue = ''; } })"
              @endif>
             <div class="px-4 py-3 border-b font-semibold text-gray-700 flex justify-between items-center">
                 <span>Standard Inspection Checklist</span>
-                <span class="text-xs {{ $uncheckedCount ? 'text-amber-600' : 'text-green-600' }}">
-                    {{ $inspection->items->count() - $uncheckedCount }} / {{ $inspection->items->count() }} checked
-                </span>
+                @if ($canEdit)
+                    <span class="text-xs" :class="checkedCount === {{ $inspection->items->count() }} ? 'text-green-600' : 'text-amber-600'"
+                          x-text="checkedCount + ' / {{ $inspection->items->count() }} checked'"></span>
+                @else
+                    <span class="text-xs {{ $uncheckedCount ? 'text-amber-600' : 'text-green-600' }}">
+                        {{ $inspection->items->count() - $uncheckedCount }} / {{ $inspection->items->count() }} checked
+                    </span>
+                @endif
             </div>
 
-            <form method="POST" action="{{ route('staff.inspections.items.batch-update', $inspection) }}">
+            <form method="POST" action="{{ route('staff.inspections.items.batch-update', $inspection) }}" @if ($canEdit) @submit="submitting = true" @endif>
                 @csrf
                 <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -137,9 +173,10 @@
                                     @if ($canEdit)
                                         <input type="hidden" :name="`items[{{ $item->id }}][id]`" value="{{ $item->id }}">
                                         <input type="hidden" :name="`items[{{ $item->id }}][urgency]`" :value="items[{{ $item->id }}]">
-                                        @foreach (['satisfactory', 'advisory', 'critical'] as $value)
+                                        @foreach (['satisfactory' => 'Good', 'advisory' => 'Moderate', 'critical' => 'Poor'] as $value => $valueLabel)
                                             <td class="px-2 py-2 text-center">
                                                 <button type="button" @click="set({{ $item->id }}, '{{ $value }}')"
+                                                        title="{{ $item->title }} — {{ $valueLabel }}" aria-label="Mark {{ $item->title }} as {{ $valueLabel }}"
                                                         class="w-6 h-6 rounded-full border-2 transition-colors"
                                                         :class="items[{{ $item->id }}] === '{{ $value }}' ? '{{ $btnActiveClass[$value] }}' : 'border-gray-300 hover:border-gray-400'"></button>
                                             </td>
@@ -161,8 +198,11 @@
                 </div>
 
                 @if ($canEdit)
-                    <div class="px-4 py-3 border-t bg-gray-50 flex items-center justify-between">
-                        <p class="text-xs text-gray-500">Click Good / Moderate / Poor for as many parts as you like, then save once — nothing is saved until you click Save.</p>
+                    <div class="px-4 py-3 border-t bg-gray-50 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-3">
+                            <p class="text-xs text-gray-500">Click Good / Moderate / Poor for as many parts as you like, then save once — nothing is saved until you click Save.</p>
+                            <button type="button" @click="markAllGood()" class="text-xs font-medium text-red-600 hover:underline shrink-0">Mark all Good</button>
+                        </div>
                         <button type="submit" :disabled="!dirty"
                                 class="px-4 py-2 rounded-lg text-sm font-medium text-white shrink-0"
                                 :class="dirty ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-300 cursor-not-allowed'">
@@ -217,7 +257,10 @@
                 <form method="POST" action="{{ route('staff.inspections.items.store', $inspection) }}" enctype="multipart/form-data" class="p-4 border-t space-y-3">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <x-text-input name="title" placeholder="Finding title (e.g. Worn suspension bushes)" class="w-full" required />
+                        <div>
+                            <x-text-input name="title" placeholder="Finding title (e.g. Worn suspension bushes)" class="w-full" required />
+                            <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                        </div>
                         <select name="urgency" class="rounded-md border-gray-300 shadow-sm text-sm" required>
                             <option value="satisfactory">Satisfactory</option>
                             <option value="advisory" selected>Advisory</option>
@@ -225,7 +268,10 @@
                         </select>
                     </div>
                     <textarea name="technician_comment" rows="2" class="w-full rounded-md border-gray-300 shadow-sm text-sm" placeholder="Technician comments"></textarea>
-                    <x-text-input name="estimated_cost" type="number" step="0.01" placeholder="Estimated cost (PKR, optional)" class="w-full md:w-64" />
+                    <div>
+                        <x-text-input name="estimated_cost" type="number" step="0.01" placeholder="Estimated cost (PKR, optional)" class="w-full md:w-64" />
+                        <x-input-error :messages="$errors->get('estimated_cost')" class="mt-2" />
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label class="text-xs text-gray-500">Before photos/videos</label>
@@ -237,7 +283,7 @@
                         </div>
                     </div>
                     <div class="flex justify-end">
-                        <x-secondary-button>+ Add Finding Outside Checklist</x-secondary-button>
+                        <x-secondary-button type="submit">+ Add Finding Outside Checklist</x-secondary-button>
                     </div>
                 </form>
             @endif
@@ -271,24 +317,31 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800 flex items-center justify-between">
                 <span>Job Comments &amp; Progress Updates</span>
-                <span class="text-xs text-gray-400 font-normal">Every comment emails the customer</span>
+                <span class="text-xs text-gray-400 font-normal">Comments to the customer email them — internal notes don't</span>
             </div>
 
-            <form method="POST" action="{{ route('staff.inspections.comments.store', $inspection) }}" class="p-4 border-b border-gray-100 space-y-2">
+            <form method="POST" action="{{ route('staff.inspections.comments.store', $inspection) }}" class="p-4 border-b border-gray-100 space-y-2" x-data="{ internal: false }">
                 @csrf
                 <textarea name="body" rows="2" required maxlength="2000"
                           class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500"
                           placeholder="e.g. Suspension parts ordered, expected by tomorrow afternoon."></textarea>
-                <div class="flex justify-end">
-                    <x-primary-button>Add Comment &amp; Notify Customer</x-primary-button>
+                <div class="flex justify-between items-center">
+                    <label class="flex items-center gap-2 text-xs text-gray-600">
+                        <input type="checkbox" name="is_internal" value="1" x-model="internal" class="rounded border-gray-300">
+                        Internal note (staff only — won't notify or show the customer)
+                    </label>
+                    <x-primary-button x-text="internal ? 'Add Internal Note' : 'Add Comment & Notify Customer'"></x-primary-button>
                 </div>
             </form>
 
             <ul class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
                 @forelse ($inspection->comments as $comment)
-                    <li class="px-4 py-3">
+                    <li class="px-4 py-3 {{ $comment->is_internal ? 'bg-amber-50/60' : '' }}">
                         <div class="flex items-start justify-between gap-3">
                             <div class="min-w-0">
+                                @if ($comment->is_internal)
+                                    <span class="inline-block text-[10px] uppercase font-semibold tracking-wide text-amber-700 bg-amber-100 rounded px-1.5 py-0.5 mb-1">Internal — staff only</span>
+                                @endif
                                 <div class="text-sm text-gray-800">{{ $comment->body }}</div>
                                 <div class="text-xs text-gray-400 mt-1">
                                     {{ $comment->author->name }}
@@ -298,7 +351,14 @@
                                     · {{ $comment->created_at->diffForHumans() }}
                                 </div>
                             </div>
-                            <span class="shrink-0 text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">Customer Notified</span>
+                            @php
+                                $hasRealEmail = $inspection->vehicle->customer->email && ! str_ends_with($inspection->vehicle->customer->email, '@customer.autoforce.local');
+                            @endphp
+                            @if ($hasRealEmail)
+                                <span class="shrink-0 text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">Customer Emailed</span>
+                            @else
+                                <span class="shrink-0 text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 font-medium">No email on file — share link</span>
+                            @endif
                         </div>
                     </li>
                 @empty

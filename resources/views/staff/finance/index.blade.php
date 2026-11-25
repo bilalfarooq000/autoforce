@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div class="bg-white rounded-lg shadow p-4">
                 <div class="text-xs text-gray-500">Total Invoiced</div>
                 <div class="text-xl font-bold">PKR {{ number_format($stats['total_invoiced']) }}</div>
@@ -17,10 +17,14 @@
                 <div class="text-xs text-gray-500">Outstanding</div>
                 <div class="text-xl font-bold text-red-600">PKR {{ number_format($stats['total_outstanding']) }}</div>
             </div>
-            <div class="bg-white rounded-lg shadow p-4">
+            <a href="{{ route('staff.finance.index', array_merge(request()->except(['status', 'page']), ['status' => 'unpaid'])) }}" class="bg-white rounded-lg shadow p-4 hover:shadow-md transition">
                 <div class="text-xs text-gray-500">Unpaid Invoices</div>
                 <div class="text-xl font-bold">{{ $stats['unpaid_count'] }}</div>
-            </div>
+            </a>
+            <a href="{{ route('staff.finance.index', array_merge(request()->except(['status', 'page']), ['status' => 'partial'])) }}" class="bg-white rounded-lg shadow p-4 hover:shadow-md transition">
+                <div class="text-xs text-gray-500">Partially Paid</div>
+                <div class="text-xl font-bold">{{ $stats['partial_count'] }}</div>
+            </a>
         </div>
 
         <form method="GET" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-wrap gap-3 items-end">

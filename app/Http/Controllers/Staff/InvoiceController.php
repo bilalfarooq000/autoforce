@@ -120,8 +120,12 @@ class InvoiceController extends Controller
 
         $invoice = $this->createInvoiceFromRequest($request, $vehicle->id, $customer->id, null);
 
+        if ($invoice instanceof \Illuminate\Http\RedirectResponse) {
+            return $invoice;
+        }
+
         return redirect()->route('staff.invoices.show', $invoice)
-            ->with('status', 'Invoice created. Customer emailed a copy.');
+            ->with('status', 'Invoice created. '.$this->invoiceDeliveryStatus($invoice));
     }
 
     public function create(Inspection $inspection)
@@ -144,8 +148,12 @@ class InvoiceController extends Controller
 
         $invoice = $this->createInvoiceFromRequest($request, $inspection->vehicle_id, $inspection->vehicle->customer_id, $inspection->id);
 
+        if ($invoice instanceof \Illuminate\Http\RedirectResponse) {
+            return $invoice;
+        }
+
         return redirect()->route('staff.invoices.show', $invoice)
-            ->with('status', 'Invoice created. Customer emailed a copy.');
+            ->with('status', 'Invoice created. '.$this->invoiceDeliveryStatus($invoice));
     }
 
     /**
@@ -170,11 +178,28 @@ class InvoiceController extends Controller
     {
         $invoice = $this->createInvoiceFromRequest($request, $vehicle->id, $vehicle->customer_id, null);
 
+        if ($invoice instanceof \Illuminate\Http\RedirectResponse) {
+            return $invoice;
+        }
+
         return redirect()->route('staff.invoices.show', $invoice)
-            ->with('status', 'Invoice created. Customer emailed a copy.');
+            ->with('status', 'Invoice created. '.$this->invoiceDeliveryStatus($invoice));
     }
 
-    private function createInvoiceFromRequest(Request $request, int $vehicleId, int $customerId, ?int $inspectionId): Invoice
+    /**
+     * The flash message after creating an invoice must not overclaim delivery —
+     * placeholder emails (auto-generated for phone-only customers) never
+     * actually send, so say so instead of "Customer emailed a copy."
+     */
+    private function invoiceDeliveryStatus(Invoice $invoice): string
+    {
+        $email = $invoice->customer->email ?? null;
+        $hasRealEmail = $email && ! str_ends_with($email, '@customer.autoforce.local');
+
+        return $hasRealEmail ? 'Customer emailed a copy.' : 'No email on file — share the invoice link or PDF with the customer directly.';
+    }
+
+    private function createInvoiceFromRequest(Request $request, int $vehicleId, int $customerId, ?int $inspectionId): Invoice|\Illuminate\Http\RedirectResponse
     {
         $data = $request->validate([
             'items' => ['required', 'array', 'min:1'],
@@ -191,6 +216,10 @@ class InvoiceController extends Controller
             $subtotal += $row['quantity'] * $row['unit_price'];
         }
         $tax = $data['tax'] ?? 0;
+
+        if ($subtotal + $tax <= 0) {
+            return back()->withInput()->withErrors(['items' => 'Invoice total can\'t be zero — check the item prices before issuing.']);
+        }
 
         $invoice = Invoice::create([
             'invoice_number' => 'AF-'.now()->format('Ymd').'-'.Str::upper(Str::random(4)),
@@ -254,7 +283,7 @@ class InvoiceController extends Controller
 
     public function pdf(Invoice $invoice)
     {
-        $invoice->load('items', 'vehicle.branch', 'customer', 'payments');
+        $invoice->load('items', 'vehicle.branch', 'customer', 'payments', 'inspection');
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('staff.invoices.pdf', compact('invoice'));
 

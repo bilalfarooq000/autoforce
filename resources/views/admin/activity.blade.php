@@ -66,7 +66,12 @@
                                 {{ $activity->description }}
                                 @if ($activity->event === 'updated' && $activity->changes()->isNotEmpty())
                                     <div class="text-xs text-gray-400 mt-1">
-                                        {{ collect($activity->changes()->get('attributes'))->except(['updated_at'])->map(fn ($v, $k) => "{$k}: {$v}")->implode(', ') }}
+                                        {{ collect($activity->changes()->get('attributes'))->except(['updated_at'])->map(function ($v, $k) {
+                                            if (is_string($v) && preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $v)) {
+                                                $v = \Illuminate\Support\Carbon::parse($v)->timezone(config('app.timezone'))->format('d M Y, h:i A');
+                                            }
+                                            return "{$k}: {$v}";
+                                        })->implode(', ') }}
                                     </div>
                                 @endif
                             </td>

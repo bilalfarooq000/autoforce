@@ -130,7 +130,7 @@ class CustomerController extends Controller
         $customer->load([
             'vehicles.branch',
             'vehicles.inspections' => fn ($q) => $q->latest(),
-            'vehicles.inspections.quotation', 'vehicles.inspections.invoice',
+            'vehicles.inspections.quotation.items', 'vehicles.inspections.invoice',
             'vehicles.invoices.payments',
         ]);
 
@@ -169,6 +169,16 @@ class CustomerController extends Controller
         }
 
         if ($inspection->quotation && $inspection->quotation->status === 'approved') {
+            $pendingTasks = $inspection->quotation->items->where('status', '!=', 'done')->count();
+
+            if ($pendingTasks > 0) {
+                return [
+                    'label' => "Track Repairs ({$pendingTasks} pending)",
+                    'url' => route('staff.quotations.show', $inspection),
+                    'style' => 'secondary',
+                ];
+            }
+
             return [
                 'label' => 'Create Invoice',
                 'url' => route('staff.invoices.create', $inspection),

@@ -17,7 +17,9 @@ class PublicBookingController extends Controller
      */
     public function show(Branch $branch)
     {
-        abort_unless($branch->is_active, 404);
+        if (! $branch->is_active) {
+            return view('portal.booking.unavailable', compact('branch'));
+        }
 
         $serviceTypes = ServiceType::where('is_active', true)
             ->where(fn ($q) => $q->where('branch_id', $branch->id)->orWhereNull('branch_id'))
@@ -41,6 +43,13 @@ class PublicBookingController extends Controller
             'vehicle_model' => ['nullable', 'string', 'max:100'],
             'requested_at' => ['required', 'date', 'after:now'],
             'notes' => ['nullable', 'string', 'max:2000'],
+        ], [
+            'customer_name.required' => 'Please tell us your name.',
+            'customer_phone.required' => 'Please enter your phone number.',
+            'customer_phone.regex' => 'Enter a valid Pakistani mobile number, e.g. 0300-1234567.',
+            'customer_email.email' => 'That doesn\'t look like a valid email address.',
+            'requested_at.required' => 'Please choose a date and time for your booking.',
+            'requested_at.after' => 'Please choose a time that\'s still in the future.',
         ]);
 
         Booking::create(array_merge($data, [

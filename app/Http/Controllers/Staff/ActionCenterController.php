@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\InventoryItem;
 use App\Models\Invoice;
 use App\Models\Quotation;
@@ -25,7 +26,7 @@ class ActionCenterController extends Controller
             ->where('issued_at', '<=', now()->subDays(7))
             ->when($branchId, fn ($q) => $q->whereHas('vehicle', fn ($v) => $v->where('branch_id', $branchId)))
             ->get()
-            ->sortByDesc(fn ($invoice) => $invoice->issued_at->diffInDays(now()));
+            ->sortByDesc(fn ($invoice) => (int) $invoice->issued_at->diffInDays(now()));
 
         $pendingApprovals = Quotation::with('inspection.vehicle.customer')
             ->where('status', 'pending')
@@ -40,6 +41,12 @@ class ActionCenterController extends Controller
             ->orderByRaw('CAST(quantity_on_hand AS SIGNED) - CAST(reorder_level AS SIGNED) ASC')
             ->get();
 
-        return view('staff.action-center.index', compact('overdueInvoices', 'pendingApprovals', 'lowStockItems'));
+        $newBookingRequests = Booking::with('branch', 'serviceType')
+            ->where('status', 'pending')
+            ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
+            ->oldest('requested_at')
+            ->get();
+
+        return view('staff.action-center.index', compact('overdueInvoices', 'pendingApprovals', 'lowStockItems', 'newBookingRequests'));
     }
 }

@@ -7,7 +7,11 @@
     </x-slot>
 
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 space-y-6">
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 border-l-4 {{ $newBookingRequests->count() ? 'border-l-blue-600' : 'border-l-gray-200' }}">
+                <div class="text-xs text-gray-500">New Booking Requests</div>
+                <div class="text-2xl font-bold {{ $newBookingRequests->count() ? 'text-blue-600' : 'text-gray-900' }}">{{ $newBookingRequests->count() }}</div>
+            </div>
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 border-l-4 {{ $overdueInvoices->count() ? 'border-l-red-600' : 'border-l-gray-200' }}">
                 <div class="text-xs text-gray-500">Overdue Invoices</div>
                 <div class="text-2xl font-bold {{ $overdueInvoices->count() ? 'text-red-600' : 'text-gray-900' }}">{{ $overdueInvoices->count() }}</div>
@@ -19,6 +23,38 @@
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 border-l-4 {{ $lowStockItems->count() ? 'border-l-red-600' : 'border-l-gray-200' }}">
                 <div class="text-xs text-gray-500">Low Stock Alerts</div>
                 <div class="text-2xl font-bold {{ $lowStockItems->count() ? 'text-red-600' : 'text-gray-900' }}">{{ $lowStockItems->count() }}</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-4 py-3 border-b border-gray-200 font-semibold text-gray-800">New Booking Requests</div>
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-900 text-left text-gray-300 text-xs font-semibold uppercase tracking-wider border-b-2 border-red-600">
+                    <tr>
+                        <th class="px-4 py-2">Requested For</th>
+                        <th class="px-4 py-2">Customer</th>
+                        <th class="px-4 py-2">Branch</th>
+                        <th class="px-4 py-2">Service</th>
+                        <th class="px-4 py-2"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                    @forelse ($newBookingRequests as $booking)
+                        <tr class="hover:bg-red-50/50 transition-colors">
+                            <td class="px-4 py-2 font-medium">{{ $booking->requested_at->format('d M, h:i A') }}</td>
+                            <td class="px-4 py-2">{{ $booking->customer_name }} <span class="text-xs text-gray-400">({{ $booking->customer_phone }})</span></td>
+                            <td class="px-4 py-2 text-gray-500">{{ $booking->branch->name ?? '—' }}</td>
+                            <td class="px-4 py-2 text-gray-500">{{ $booking->serviceType->name ?? '—' }}</td>
+                            <td class="px-4 py-2 text-right">
+                                <a href="{{ route('staff.bookings.index', ['status' => 'pending']) }}" class="text-xs text-red-600 hover:underline font-medium">Review</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="5" class="px-4 py-6 text-center text-gray-500">No new booking requests.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
             </div>
         </div>
 
@@ -42,7 +78,7 @@
                             <td class="px-4 py-2 font-medium">{{ $invoice->invoice_number }}</td>
                             <td class="px-4 py-2">{{ $invoice->customer->name }}</td>
                             <td class="px-4 py-2 text-gray-500">{{ $invoice->issued_at->format('d M Y') }}</td>
-                            <td class="px-4 py-2 text-red-600 font-medium">{{ $invoice->issued_at->diffInDays(now()) }}</td>
+                            <td class="px-4 py-2 text-red-600 font-medium">{{ max(0, (int) $invoice->issued_at->diffInDays(now()) - 7) }}</td>
                             <td class="px-4 py-2 text-right font-medium">PKR {{ number_format($invoice->balanceDue()) }}</td>
                             <td class="px-4 py-2 text-right">
                                 <a href="{{ route('staff.invoices.show', $invoice) }}" class="text-xs text-red-600 hover:underline font-medium">Open</a>

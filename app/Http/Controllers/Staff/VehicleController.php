@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreVehicleRequest;
 use App\Http\Requests\Staff\UpdateVehicleRequest;
+use App\Models\Branch;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\NotificationService;
@@ -46,7 +47,9 @@ class VehicleController extends Controller
             }
         }
 
-        return view('staff.vehicles.create', compact('customer'));
+        $branches = $request->user()->hasRole('admin') ? Branch::where('is_active', true)->orderBy('name')->get() : collect();
+
+        return view('staff.vehicles.create', compact('customer', 'branches'));
     }
 
     public function store(StoreVehicleRequest $request)
@@ -79,7 +82,7 @@ class VehicleController extends Controller
 
         $vehicle = Vehicle::create([
             'customer_id' => $customer->id,
-            'branch_id' => $request->user()->branch_id,
+            'branch_id' => $request->user()->hasRole('admin') ? $data['branch_id'] : $request->user()->branch_id,
             'registration_number' => $data['registration_number'],
             'make' => $data['make'],
             'model' => $data['model'],

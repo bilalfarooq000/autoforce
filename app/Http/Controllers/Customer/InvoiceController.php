@@ -12,7 +12,7 @@ class InvoiceController extends Controller
     {
         abort_unless($invoice->customer_id === $request->user()->id, 403);
 
-        $invoice->load('items', 'vehicle.branch', 'customer', 'payments');
+        $invoice->load('items', 'vehicle.branch', 'customer', 'payments', 'inspection');
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('staff.invoices.pdf', compact('invoice'));
 

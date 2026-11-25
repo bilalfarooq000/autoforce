@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Inspection;
 use App\Models\InventoryItem;
 use App\Models\Invoice;
@@ -49,6 +50,9 @@ class DashboardController extends Controller
             'low_stock_items' => InventoryItem::where('is_active', true)
                 ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
                 ->whereColumn('quantity_on_hand', '<=', 'reorder_level')
+                ->count(),
+            'new_booking_requests' => Booking::where('status', 'pending')
+                ->when($branchId, fn ($q) => $q->where('branch_id', $branchId))
                 ->count(),
         ];
 

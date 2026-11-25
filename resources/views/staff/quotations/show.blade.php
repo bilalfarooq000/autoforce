@@ -36,7 +36,7 @@
                 </div>
                 <ul class="text-sm divide-y border rounded-md">
                     @foreach ($q->items as $qi)
-                        <li class="px-3 py-2 flex justify-between"><span>{{ $qi->description }}</span><span>PKR {{ number_format($qi->amount) }}</span></li>
+                        <li class="px-3 py-2 flex justify-between"><span>{{ $qi->description }} <span class="text-xs text-gray-400 capitalize">({{ $qi->type ?? 'labor' }})</span></span><span>PKR {{ number_format($qi->amount) }}</span></li>
                     @endforeach
                 </ul>
 

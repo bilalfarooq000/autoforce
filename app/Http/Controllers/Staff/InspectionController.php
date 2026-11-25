@@ -111,18 +111,24 @@ class InspectionController extends Controller
     {
         $data = $request->validate([
             'body' => ['required', 'string', 'max:2000'],
+            'is_internal' => ['nullable', 'boolean'],
         ]);
+
+        $isInternal = $request->boolean('is_internal');
 
         $comment = JobComment::create([
             'inspection_id' => $inspection->id,
             'author_id' => $request->user()->id,
             'stage' => $inspection->status,
             'body' => $data['body'],
+            'is_internal' => $isInternal,
         ]);
 
-        NotificationService::notifyJobComment($comment->load('author', 'inspection.vehicle.customer'));
+        if (! $isInternal) {
+            NotificationService::notifyJobComment($comment->load('author', 'inspection.vehicle.customer'));
+        }
 
-        return back()->with('status', 'Comment added. Customer notified by email.');
+        return back()->with('status', $isInternal ? 'Internal note added — staff only.' : 'Comment added. Customer notified by email.');
     }
 
     public function startInspection(Request $request, Inspection $inspection)
@@ -192,21 +198,27 @@ class InspectionController extends Controller
         $this->attachMedia($request, $item, $inspection->id);
 
         // Standard checklist items have a fixed, known location on the vehicle —
-        // marking its status automatically places/updates the diagram pin for it.
+        // marking it Moderate/Poor automatically places the diagram pin for it.
+        // "Good" items aren't pinned — a diagram full of 18 "fine" dots just
+        // buries the handful that actually need the customer's attention.
         if ($item->category) {
-            $position = InspectionChecklist::positionFor($item->title);
+            if ($data['urgency'] === 'satisfactory') {
+                InspectionDiagramMark::where('inspection_item_id', $item->id)->delete();
+            } else {
+                $position = InspectionChecklist::positionFor($item->title);
 
-            InspectionDiagramMark::updateOrCreate(
-                ['inspection_item_id' => $item->id],
-                [
-                    'inspection_id' => $inspection->id,
-                    'view' => $position['view'],
-                    'x' => $position['x'],
-                    'y' => $position['y'],
-                    'severity' => $data['urgency'],
-                    'note' => $item->title,
-                ]
-            );
+                InspectionDiagramMark::updateOrCreate(
+                    ['inspection_item_id' => $item->id],
+                    [
+                        'inspection_id' => $inspection->id,
+                        'view' => $position['view'],
+                        'x' => $position['x'],
+                        'y' => $position['y'],
+                        'severity' => $data['urgency'],
+                        'note' => $item->title,
+                    ]
+                );
+            }
         }
 
         return redirect()->route('staff.inspections.show', $inspection)
@@ -245,19 +257,23 @@ class InspectionController extends Controller
                 $updated++;
 
                 if ($item->category) {
-                    $position = InspectionChecklist::positionFor($item->title);
+                    if ($row['urgency'] === 'satisfactory') {
+                        InspectionDiagramMark::where('inspection_item_id', $item->id)->delete();
+                    } else {
+                        $position = InspectionChecklist::positionFor($item->title);
 
-                    InspectionDiagramMark::updateOrCreate(
-                        ['inspection_item_id' => $item->id],
-                        [
-                            'inspection_id' => $inspection->id,
-                            'view' => $position['view'],
-                            'x' => $position['x'],
-                            'y' => $position['y'],
-                            'severity' => $row['urgency'],
-                            'note' => $item->title,
-                        ]
-                    );
+                        InspectionDiagramMark::updateOrCreate(
+                            ['inspection_item_id' => $item->id],
+                            [
+                                'inspection_id' => $inspection->id,
+                                'view' => $position['view'],
+                                'x' => $position['x'],
+                                'y' => $position['y'],
+                                'severity' => $row['urgency'],
+                                'note' => $item->title,
+                            ]
+                        );
+                    }
                 }
             }
         });

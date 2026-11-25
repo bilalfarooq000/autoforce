@@ -33,7 +33,7 @@
                     @forelse ($vehicles as $vehicle)
                         <tr class="hover:bg-red-50/50 transition-colors">
                             <td class="px-4 py-3 font-medium">{{ $vehicle->registration_number }}</td>
-                            <td class="px-4 py-3">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }})</td>
+                            <td class="px-4 py-3">{{ $vehicle->make }} {{ $vehicle->model }}@if($vehicle->year) ({{ $vehicle->year }})@endif</td>
                             <td class="px-4 py-3">{{ $vehicle->customer->name }}<br><span class="text-xs text-gray-500">{{ $vehicle->customer->phone }}</span></td>
                             <td class="px-4 py-3">{{ $vehicle->branch->name ?? '—' }}</td>
                             <td class="px-4 py-3">{{ number_format($vehicle->mileage) }} km</td>

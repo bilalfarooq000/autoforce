@@ -33,12 +33,14 @@
             </div>
             <div>
                 <x-input-label for="branch_id" value="Branch" />
-                <select id="branch_id" name="branch_id" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm">
-                    <option value="">— No branch —</option>
+                <select id="branch_id" name="branch_id" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" required>
+                    <option value="" disabled @selected(! $staff->branch_id)>Select branch…</option>
                     @foreach ($branches as $branch)
-                        <option value="{{ $branch->id }}" @selected($staff->branch_id === $branch->id)>{{ $branch->name }}</option>
+                        <option value="{{ $branch->id }}" @selected(old('branch_id', $staff->branch_id) == $branch->id)>{{ $branch->name }}</option>
                     @endforeach
                 </select>
+                <p class="text-xs text-gray-500 mt-1">Not used for Admin accounts, which have access to every branch.</p>
+                <x-input-error :messages="$errors->get('branch_id')" class="mt-2" />
             </div>
             <div class="flex items-center gap-2">
                 <input type="checkbox" id="is_active" name="is_active" value="1" @checked($staff->is_active) class="rounded border-gray-300">
@@ -47,7 +49,7 @@
             <div x-data="{ show: false }">
                 <x-input-label for="password" value="Reset Password (optional)" />
                 <div class="relative mt-1">
-                    <input id="password" name="password" :type="show ? 'text' : 'password'" class="block w-full rounded-md border-gray-300 shadow-sm pr-16" placeholder="Leave blank to keep current password">
+                    <input id="password" name="password" type="password" :type="show ? 'text' : 'password'" class="block w-full rounded-md border-gray-300 shadow-sm pr-16" placeholder="Leave blank to keep current password">
                     <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 px-3 text-xs text-gray-500 hover:text-gray-800" x-text="show ? 'Hide' : 'Show'"></button>
                 </div>
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />

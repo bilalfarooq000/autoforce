@@ -34,46 +34,46 @@
             @csrf
 
             <div>
-                <label class="block text-xs font-medium text-gray-500 mb-1">Your Name</label>
-                <input type="text" name="customer_name" value="{{ old('customer_name') }}" required
+                <label for="customer_name" class="block text-xs font-medium text-gray-500 mb-1">Your Name</label>
+                <input id="customer_name" type="text" name="customer_name" value="{{ old('customer_name') }}" required
                        class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Phone</label>
-                    <input type="text" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="03XX-XXXXXXX" required
+                    <label for="customer_phone" class="block text-xs font-medium text-gray-500 mb-1">Phone</label>
+                    <input id="customer_phone" type="text" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="03XX-XXXXXXX" required
                            class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Email (optional)</label>
-                    <input type="email" name="customer_email" value="{{ old('customer_email') }}"
+                    <label for="customer_email" class="block text-xs font-medium text-gray-500 mb-1">Email (optional)</label>
+                    <input id="customer_email" type="email" name="customer_email" value="{{ old('customer_email') }}"
                            class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Vehicle Reg (optional)</label>
-                    <input type="text" name="vehicle_registration_number" value="{{ old('vehicle_registration_number') }}"
+                    <label for="vehicle_registration_number" class="block text-xs font-medium text-gray-500 mb-1">Vehicle Reg (optional)</label>
+                    <input id="vehicle_registration_number" type="text" name="vehicle_registration_number" value="{{ old('vehicle_registration_number') }}"
                            class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Make (optional)</label>
-                    <input type="text" name="vehicle_make" value="{{ old('vehicle_make') }}"
+                    <label for="vehicle_make" class="block text-xs font-medium text-gray-500 mb-1">Make (optional)</label>
+                    <input id="vehicle_make" type="text" name="vehicle_make" value="{{ old('vehicle_make') }}"
                            class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Model (optional)</label>
-                    <input type="text" name="vehicle_model" value="{{ old('vehicle_model') }}"
+                    <label for="vehicle_model" class="block text-xs font-medium text-gray-500 mb-1">Model (optional)</label>
+                    <input id="vehicle_model" type="text" name="vehicle_model" value="{{ old('vehicle_model') }}"
                            class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
                 </div>
             </div>
 
             @if ($serviceTypes->isNotEmpty())
                 <div>
-                    <label class="block text-xs font-medium text-gray-500 mb-1">Service Needed (optional)</label>
-                    <select name="service_type_id" class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
+                    <label for="service_type_id" class="block text-xs font-medium text-gray-500 mb-1">Service Needed (optional)</label>
+                    <select id="service_type_id" name="service_type_id" class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
                         <option value="">— Not sure yet —</option>
                         @foreach ($serviceTypes as $serviceType)
                             <option value="{{ $serviceType->id }}" @selected(old('service_type_id') == $serviceType->id)>{{ $serviceType->name }}</option>
@@ -83,15 +83,15 @@
             @endif
 
             <div>
-                <label class="block text-xs font-medium text-gray-500 mb-1">Preferred Date & Time</label>
-                <input type="datetime-local" name="requested_at" value="{{ old('requested_at') }}" required
+                <label for="requested_at" class="block text-xs font-medium text-gray-500 mb-1">Preferred Date & Time</label>
+                <input id="requested_at" type="datetime-local" name="requested_at" value="{{ old('requested_at') }}" required
                        min="{{ now()->addHour()->format('Y-m-d\TH:i') }}"
                        class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
             </div>
 
             <div>
-                <label class="block text-xs font-medium text-gray-500 mb-1">Anything else? (optional)</label>
-                <textarea name="notes" rows="2" class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">{{ old('notes') }}</textarea>
+                <label for="notes" class="block text-xs font-medium text-gray-500 mb-1">Anything else? (optional)</label>
+                <textarea id="notes" name="notes" rows="2" class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">{{ old('notes') }}</textarea>
             </div>
 
             <button type="submit" class="w-full px-4 py-3 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700">

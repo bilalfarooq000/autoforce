@@ -47,7 +47,7 @@ class StaffController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
-            'branch_id' => $data['branch_id'] ?? null,
+            'branch_id' => $data['role'] === 'admin' ? null : ($data['branch_id'] ?? null),
             'password' => bcrypt($data['password']),
         ]);
 
@@ -89,7 +89,7 @@ class StaffController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
-            'branch_id' => $data['branch_id'] ?? null,
+            'branch_id' => $data['role'] === 'admin' ? null : ($data['branch_id'] ?? null),
             'is_active' => $request->boolean('is_active'),
             ...($data['password'] ? ['password' => bcrypt($data['password'])] : []),
         ]);

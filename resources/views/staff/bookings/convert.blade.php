@@ -29,7 +29,7 @@
 
             <div>
                 <label class="block text-xs font-medium text-gray-500 mb-1">Current Mileage (km)</label>
-                <input type="number" name="mileage_at_visit" value="{{ old('mileage_at_visit', 0) }}" min="0" required
+                <input type="number" name="mileage_at_visit" value="{{ old('mileage_at_visit') }}" min="0" required placeholder="e.g. 45000"
                        class="w-full rounded-lg border-gray-300 text-sm focus:border-red-500 focus:ring-red-500">
                 @error('mileage_at_visit') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
             </div>

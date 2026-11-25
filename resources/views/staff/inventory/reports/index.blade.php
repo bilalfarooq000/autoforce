@@ -60,7 +60,7 @@
                                 <tr class="hover:bg-red-50/50 transition-colors">
                                     <td class="px-4 py-3 font-medium">{{ $b->name }}</td>
                                     <td class="px-4 py-3 text-right">{{ $b->items_count }}</td>
-                                    <td class="px-4 py-3 text-right">PKR {{ number_format($b->stock_value, 2) }}</td>
+                                    <td class="px-4 py-3 text-right">PKR {{ number_format($b->stock_value) }}</td>
                                     <td class="px-4 py-3 text-right {{ $b->low_stock_count ? 'text-red-600 font-medium' : '' }}">{{ $b->low_stock_count }}</td>
                                     <td class="px-4 py-3 text-right">
                                         <a href="{{ route('staff.inventory.reports.index', ['tab' => 'overview', 'branch_id' => $b->id]) }}" class="text-xs text-red-600 hover:underline font-medium">View reports →</a>
@@ -116,7 +116,7 @@
                     <div class="border-b border-gray-100 last:border-b-0">
                         <div class="px-4 py-2 bg-gray-50 flex justify-between text-xs font-semibold text-gray-600 uppercase">
                             <span>{{ $category }}</span>
-                            <span>{{ $data['total_qty'] }} units · PKR {{ number_format($data['total_value'], 2) }}</span>
+                            <span>{{ $data['total_qty'] }} units · PKR {{ number_format($data['total_value']) }}</span>
                         </div>
                         <div class="overflow-x-auto">
                         <table class="w-full text-sm">
@@ -124,8 +124,8 @@
                                 @foreach ($data['items'] as $item)
                                     <tr>
                                         <td class="px-4 py-2"><a href="{{ route('staff.inventory.items.show', $item) }}" class="text-red-600 hover:underline">{{ $item->name }}</a></td>
-                                        <td class="px-4 py-2 text-right text-gray-500">{{ $item->quantity_on_hand }} {{ $item->unit }} × PKR {{ number_format($item->cost_price, 2) }}</td>
-                                        <td class="px-4 py-2 text-right font-medium w-32">PKR {{ number_format($item->stockValue(), 2) }}</td>
+                                        <td class="px-4 py-2 text-right text-gray-500">{{ $item->quantity_on_hand }} {{ $item->unit }} × PKR {{ number_format($item->cost_price) }}</td>
+                                        <td class="px-4 py-2 text-right font-medium w-32">PKR {{ number_format($item->stockValue()) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -137,7 +137,7 @@
                 @endforelse
                 <div class="px-4 py-3 bg-gray-900 text-white flex justify-between font-semibold">
                     <span>Total Inventory Value</span>
-                    <span>PKR {{ number_format($grandTotalValue, 2) }}</span>
+                    <span>PKR {{ number_format($grandTotalValue) }}</span>
                 </div>
             </div>
         @endif

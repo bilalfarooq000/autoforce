@@ -14,6 +14,7 @@ class StoreVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'branch_id' => [$this->user()->hasRole('admin') ? 'required' : 'nullable', 'exists:branches,id'],
             'customer_id' => ['nullable', 'exists:users,id'],
             'customer_name' => ['required_without:customer_id', 'nullable', 'string', 'max:255'],
             'customer_phone' => ['required_without:customer_id', 'nullable', 'string', 'max:30', 'regex:/^(\+?92|0)3\d{2}-?\d{7}$/'],

@@ -12,7 +12,14 @@ class JobComment extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $fillable = ['inspection_id', 'author_id', 'stage', 'body'];
+    protected $fillable = ['inspection_id', 'author_id', 'stage', 'body', 'is_internal'];
+
+    protected function casts(): array
+    {
+        return [
+            'is_internal' => 'boolean',
+        ];
+    }
 
     public function getActivitylogOptions(): LogOptions
     {

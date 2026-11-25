@@ -64,7 +64,7 @@
                             <div class="px-4 py-3 bg-gray-50/60 flex flex-wrap items-center justify-between gap-2">
                                 <div>
                                     <a href="{{ route('staff.vehicles.show', $vehicle) }}" class="font-medium text-red-600 hover:underline">{{ $vehicle->registration_number }}</a>
-                                    <span class="text-xs text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }}) · {{ $vehicle->branch->name ?? '—' }}</span>
+                                    <span class="text-xs text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }}@if($vehicle->year) ({{ $vehicle->year }})@endif · {{ $vehicle->branch->name ?? '—' }}</span>
                                 </div>
                                 <div class="flex items-center gap-3 shrink-0">
                                     @if (auth()->user()->hasAnyRole(['admin', 'manager', 'service_advisor']))

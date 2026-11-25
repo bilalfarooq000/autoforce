@@ -80,7 +80,7 @@
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-right text-gray-500">{{ $item->reorder_level }}</td>
-                            <td class="px-4 py-3 text-right text-gray-600">PKR {{ number_format($item->cost_price, 2) }}</td>
+                            <td class="px-4 py-3 text-right text-gray-600">PKR {{ number_format($item->cost_price) }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-2">
                                     @hasanyrole('admin|manager|inventory_manager')

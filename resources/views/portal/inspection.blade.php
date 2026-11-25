@@ -21,17 +21,50 @@
 
         <div class="bg-white rounded-lg shadow p-4">
             <div class="font-semibold text-lg">{{ $inspection->vehicle->registration_number }}</div>
-            <div class="text-sm text-gray-500">{{ $inspection->vehicle->make }} {{ $inspection->vehicle->model }} ({{ $inspection->vehicle->year }})</div>
+            <div class="text-sm text-gray-500">{{ $inspection->vehicle->make }} {{ $inspection->vehicle->model }}@if($inspection->vehicle->year) ({{ $inspection->vehicle->year }})@endif</div>
             <div class="text-sm text-gray-500 mt-1">Reason: {{ $inspection->reason }}</div>
             <div class="text-sm text-gray-500">Mileage: {{ number_format($inspection->mileage_at_visit) }} km</div>
             <div class="text-sm text-gray-500">Technician: {{ $inspection->technician->name ?? '—' }}</div>
             <span class="inline-block mt-2 text-xs px-2 py-1 rounded-full {{ in_array($inspection->status, ['ready_for_collection', 'completed']) ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' }}">
-                {{ $inspection->statusLabel() }}
+                {{ $inspection->status === 'awaiting_approval' && ! $inspection->quotation ? 'Diagnosis Complete' : $inspection->statusLabel() }}
             </span>
             @if ($inspection->summary)
                 <p class="text-sm text-gray-700 mt-3 border-t pt-3">{{ $inspection->summary }}</p>
             @endif
+            @if ($inspection->status === 'awaiting_approval' && ! $inspection->quotation)
+                <p class="text-xs text-gray-500 mt-2 border-t pt-2">We're preparing a quotation for the additional work found — you'll be able to review and approve it here shortly.</p>
+            @endif
         </div>
+
+        @if ($inspection->quotation)
+            @php $q = $inspection->quotation; @endphp
+            <div class="bg-white rounded-lg shadow p-4 border-2 border-amber-300">
+                <h2 class="font-semibold text-gray-700 mb-2">Repair Quotation</h2>
+                <ul class="text-sm divide-y border rounded-md mb-3">
+                    @foreach ($q->items as $qi)
+                        <li class="px-3 py-2 flex justify-between"><span>{{ $qi->description }}</span><span>PKR {{ number_format($qi->amount) }}</span></li>
+                    @endforeach
+                </ul>
+                <div class="flex justify-between font-semibold mb-3">
+                    <span>Total</span><span>PKR {{ number_format($q->total_amount) }}</span>
+                </div>
+
+                @if ($q->status === 'pending')
+                    <form method="POST" action="{{ route('portal.quotation.decide', [$inspection->access_token, $q->id]) }}" class="space-y-2">
+                        @csrf
+                        <textarea name="customer_notes" rows="2" class="w-full rounded-md border-gray-300 shadow-sm text-sm" placeholder="Notes (optional)"></textarea>
+                        <div class="flex gap-2">
+                            <button name="decision" value="approved" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm">Approve Repair</button>
+                            <button name="decision" value="declined" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-md text-sm">Decline</button>
+                        </div>
+                    </form>
+                @else
+                    <div class="text-sm px-3 py-2 rounded-md {{ $q->status === 'approved' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
+                        You {{ $q->status }} this quotation on {{ optional($q->decided_at)->format('d M Y, h:i A') }}.
+                    </div>
+                @endif
+            </div>
+        @endif
 
         @if ($inspection->diagramMarks->count())
             <div class="bg-white rounded-lg shadow p-4">
@@ -45,7 +78,7 @@
             @forelse ($inspection->items->where('is_checked', true) as $item)
                 @php
                     $urgencyColor = ['critical' => 'border-red-300 bg-red-50', 'advisory' => 'border-amber-300 bg-amber-50', 'satisfactory' => 'border-green-300 bg-green-50'];
-                    $uLabel = ['critical' => 'Faulty', 'advisory' => 'Replaceable', 'satisfactory' => 'OK'];
+                    $uLabel = ['critical' => 'Poor', 'advisory' => 'Moderate', 'satisfactory' => 'Good'];
                 @endphp
                 <div class="bg-white rounded-lg shadow p-4 border-l-4 {{ $urgencyColor[$item->urgency] }}">
                     <div class="flex justify-between items-start">
@@ -81,41 +114,11 @@
             @endforelse
         </div>
 
-        @if ($inspection->quotation)
-            @php $q = $inspection->quotation; @endphp
-            <div class="bg-white rounded-lg shadow p-4">
-                <h2 class="font-semibold text-gray-700 mb-2">Repair Quotation</h2>
-                <ul class="text-sm divide-y border rounded-md mb-3">
-                    @foreach ($q->items as $qi)
-                        <li class="px-3 py-2 flex justify-between"><span>{{ $qi->description }}</span><span>PKR {{ number_format($qi->amount) }}</span></li>
-                    @endforeach
-                </ul>
-                <div class="flex justify-between font-semibold mb-3">
-                    <span>Total</span><span>PKR {{ number_format($q->total_amount) }}</span>
-                </div>
-
-                @if ($q->status === 'pending')
-                    <form method="POST" action="{{ route('portal.quotation.decide', [$inspection->access_token, $q->id]) }}" class="space-y-2">
-                        @csrf
-                        <textarea name="customer_notes" rows="2" class="w-full rounded-md border-gray-300 shadow-sm text-sm" placeholder="Notes (optional)"></textarea>
-                        <div class="flex gap-2">
-                            <button name="decision" value="approved" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-md text-sm">Approve Repair</button>
-                            <button name="decision" value="declined" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-md text-sm">Decline</button>
-                        </div>
-                    </form>
-                @else
-                    <div class="text-sm px-3 py-2 rounded-md {{ $q->status === 'approved' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
-                        You {{ $q->status }} this quotation on {{ optional($q->decided_at)->format('d M Y, h:i A') }}.
-                    </div>
-                @endif
-            </div>
-        @endif
-
-        @if ($inspection->comments->count())
+        @if ($inspection->comments->where('is_internal', false)->count())
             <div class="bg-white rounded-lg shadow p-4">
                 <h2 class="font-semibold text-gray-700 mb-2">Progress Updates</h2>
                 <ul class="space-y-2">
-                    @foreach ($inspection->comments as $comment)
+                    @foreach ($inspection->comments->where('is_internal', false) as $comment)
                         <li class="border rounded-md p-2 text-sm">
                             <p class="text-gray-800">{{ $comment->body }}</p>
                             <div class="text-xs text-gray-400 mt-1">{{ $comment->created_at->format('d M Y, h:i A') }}</div>

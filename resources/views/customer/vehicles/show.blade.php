@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $vehicle->registration_number }}</h2>
-            <p class="text-sm text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }} ({{ $vehicle->year }}) · {{ number_format($vehicle->mileage) }} km</p>
+            <p class="text-sm text-gray-500">{{ $vehicle->make }} {{ $vehicle->model }}@if($vehicle->year) ({{ $vehicle->year }})@endif · {{ number_format($vehicle->mileage) }} km</p>
         </div>
     </x-slot>
 
@@ -166,11 +166,11 @@
                             </div>
                         @endif
 
-                        @if ($inspection->comments->count())
+                        @if ($inspection->comments->where('is_internal', false)->count())
                             <div>
                                 <div class="text-xs font-semibold text-gray-500 uppercase mb-2">Progress Updates</div>
                                 <ul class="space-y-2">
-                                    @foreach ($inspection->comments as $comment)
+                                    @foreach ($inspection->comments->where('is_internal', false) as $comment)
                                         <li class="border rounded-md p-2 text-sm">
                                             <p class="text-gray-800">{{ $comment->body }}</p>
                                             <div class="text-xs text-gray-400 mt-1">{{ $comment->author->name }} · {{ $comment->created_at->format('d M Y, h:i A') }}</div>
